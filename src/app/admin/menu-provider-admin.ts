@@ -1,8 +1,8 @@
-import {MenuProvider} from '../commons/menu/menu-provider';
 import {Observable, of} from 'rxjs';
-import {MenuItem} from '../commons/menu/menu-item';
+
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {MenuItem, MenuProvider} from '@commons';
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MenuRouteGuard} from '../commons/menu/menu-route-guard';
+import {MenuRouteGuard} from '@commons';
 import {MenuProviderAdmin} from './menu-provider-admin';
 import {NzMessageService} from 'ng-zorro-antd';
 
