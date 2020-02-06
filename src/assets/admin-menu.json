@@ -1,0 +1,21 @@
+[
+  {
+    "title": "首页",
+    "icon": "home",
+    "path": "/admin/home"
+  },
+  {
+    "title": "用户权限管理",
+    "icon": "team",
+    "children": [
+      {
+        "title": "用户管理",
+        "path": "/admin/users"
+      },
+      {
+        "title": "权限管理",
+        "path": "/admin/users"
+      }
+    ]
+  }
+]

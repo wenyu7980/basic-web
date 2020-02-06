@@ -1,0 +1,21 @@
+<div class="login-page">
+  <div class="login">
+    <form nz-form>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="请输入用户名">
+          <nz-input-group nzPrefixIcon="user">
+            <input type="text" nz-input formControlName="userName" placeholder="用户名"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="请输入密码">
+          <nz-input-group nzPrefixIcon="lock">
+            <input type="password" nz-input formControlName="password" placeholder="密码"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <button nz-button nzType="primary" class="login-btn" (click)="login()">登录</button>
+  </div>
+</div>
