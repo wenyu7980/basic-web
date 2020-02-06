@@ -2,6 +2,7 @@
   {
     "title": "首页",
     "icon": "home",
+    "publicFlag": true,
     "path": "/admin/home"
   },
   {
@@ -10,7 +11,8 @@
     "children": [
       {
         "title": "用户管理",
-        "path": "/admin/users"
+        "path": "/admin/users",
+        "code": "users"
       },
       {
         "title": "权限管理",

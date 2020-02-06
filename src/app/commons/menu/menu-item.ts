@@ -4,6 +4,8 @@
 export interface MenuItem {
   /** 层级 */
   level?: number;
+  /** 是否是公开的 */
+  publicFlag: boolean;
   /** 菜单名 */
   title: string;
   /** 菜单编码 */

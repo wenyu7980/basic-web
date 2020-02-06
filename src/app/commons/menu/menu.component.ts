@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MenuItem} from './menu-item';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
+import {MenuProvider} from './menu-provider';
 
 @Component({
   selector: 'app-menu',
@@ -9,22 +10,21 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 })
 export class MenuComponent implements OnInit {
 
-  items: MenuItem[];
-
-  @Input('menus')
-  set menus(menus: MenuItem[]) {
-    this.items = this.menuHandler(menus);
-  }
+  menus: MenuItem[];
 
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              private menuProvider: MenuProvider) {
   }
 
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateMenu(this.router.url, this.items);
+        this.updateMenu(this.router.url, this.menus);
       }
+    });
+    this.menuProvider.getMenuItems().subscribe((menus) => {
+      this.menus = this.menuHandler(menus);
+      this.updateMenu(this.router.url, this.menus);
     });
   }
 

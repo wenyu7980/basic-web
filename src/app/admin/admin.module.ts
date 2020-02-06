@@ -7,7 +7,9 @@ import {AdminPageComponent} from './pages/admin-page/admin-page.component';
 import {MenuModule} from '../commons/menu/menu.module';
 import {HttpClientModule} from '@angular/common/http';
 import {UserListPageComponent} from './pages/user-list-page/user-list-page.component';
-import {NzLayoutModule} from 'ng-zorro-antd';
+import {NzLayoutModule, NzMessageModule} from 'ng-zorro-antd';
+import {MenuProvider} from '../commons/menu/menu-provider';
+import {MenuProviderAdmin} from './menu-provider-admin';
 
 
 @NgModule({
@@ -18,6 +20,10 @@ import {NzLayoutModule} from 'ng-zorro-antd';
     MenuModule,
     HttpClientModule,
     NzLayoutModule,
+    NzMessageModule,
+  ],
+  providers: [
+    {provide: MenuProvider, useClass: MenuProviderAdmin}
   ]
 })
 export class AdminModule {

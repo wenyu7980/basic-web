@@ -1,5 +1,5 @@
 <ul nz-menu nzMode="inline" nzTheme="dark">
-  <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: items }"></ng-container>
+  <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menus }"></ng-container>
   <ng-template #menuTpl let-menus>
     <ng-container *ngFor="let menu of menus">
       <li
