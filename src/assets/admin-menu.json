@@ -15,8 +15,9 @@
         "code": "users"
       },
       {
-        "title": "权限管理",
-        "path": "/admin/users"
+        "title": "权限角色管理",
+        "path": "/admin/roles",
+        "code": "roles"
       }
     ]
   }

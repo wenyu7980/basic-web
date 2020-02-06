@@ -18,7 +18,7 @@ export class MenuProviderAdmin extends MenuProvider {
   }
 
   protected getMenuCodes(): Observable<string[]> {
-    return of(['users']);
+    return of(['users', 'roles']);
   }
 
   get(): Observable<MenuItem[]> {

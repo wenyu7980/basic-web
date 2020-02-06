@@ -2,8 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomePageComponent} from './pages/home-page/home-page.component';
 import {AdminPageComponent} from './pages/admin-page/admin-page.component';
-import {UserListPageComponent} from './pages/user-list-page/user-list-page.component';
+import {UserTablePageComponent} from './pages/user-table-page/user-table-page.component';
 import {MenuGuardAdmin} from './menu-guard-admin';
+import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.component';
 
 
 const routes: Routes = [
@@ -18,7 +19,11 @@ const routes: Routes = [
       },
       {
         path: 'users',
-        component: UserListPageComponent
+        component: UserTablePageComponent
+      },
+      {
+        path: 'roles',
+        component: RoleTablePageComponent
       },
       {
         path: '**',

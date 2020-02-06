@@ -24,9 +24,9 @@ export abstract class MenuRouteGuard implements CanActivateChild {
             if (state.url.includes(url)) {
               return true;
             }
-            this.failBack();
-            return false;
           }
+          this.failBack();
+          return false;
         })
       );
     }
