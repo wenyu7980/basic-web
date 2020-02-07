@@ -1,24 +1,23 @@
 import {MenuItem} from './menu-item';
 import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {OperatorItem} from '@commons';
 
 /**
  * 菜单提供器
  */
 export abstract class MenuOperatorProvider {
-  /** 可访问路由code */
-  private urls: Set<string>;
   /** 可访问菜单 */
   private menus: MenuItem[];
+  /** 可访问菜单code */
+  private menuCodes: Set<string>;
   /** 可操作code */
-  private operators: Set<string>;
+  private operatorCodes: Set<string>;
 
   /**
    * 获取菜单
    */
   protected abstract getMenus(): Observable<MenuItem[]>;
-
 
   /**
    * 所有操作
@@ -26,27 +25,17 @@ export abstract class MenuOperatorProvider {
   protected abstract getOperators(): Observable<OperatorItem[]>;
 
   /**
-   * 获取用户可访问的菜单code
+   * 确认菜单
+   * @param code 菜单code
    */
-  protected abstract getUserMenuCodes(): Observable<string[]>;
+  protected abstract confirmMenu(code: string): boolean;
 
   /**
-   * 获取用户可操作的操作code
+   * 确认操作
+   * @param code 操作code
    */
-  protected abstract getUserOperatorCodes(): Observable<string[]>;
+  protected abstract confirmOperator(code: string): boolean;
 
-  /**
-   * 路由code
-   */
-  getRouteCodes(): Observable<Set<string>> {
-    if (this.urls) {
-      return of(this.urls);
-    }
-    return this.getUserMenuCodes().pipe(
-      map(codes => new Set<string>(codes)),
-      tap(urls => this.urls = urls)
-    );
-  }
 
   /**
    * 可访问菜单
@@ -55,14 +44,24 @@ export abstract class MenuOperatorProvider {
     if (this.menus) {
       return of(this.menus);
     }
-    return this.getUserMenuCodes().pipe(
+    return this.getMenus().pipe(
+      map(menus => this.filterMenu(menus))
+    );
+  }
+
+  /**
+   * 菜单code
+   */
+  getMenuCodes(): Observable<Set<string>> {
+    if (this.menuCodes) {
+      return of(this.menuCodes);
+    }
+    return this.getMenus().pipe(
+      map(menus => this.flatMenuToCode(menus)),
+      map(codes =>
+        codes.filter(code => this.confirmMenu(code))),
       map(codes => new Set<string>(codes)),
-      tap(codes => this.urls = codes),
-      switchMap((codes: Set<string>) =>
-        this.getMenus().pipe(
-          map(menus => this.filterMenu(menus, codes))
-        )),
-      tap(menus => this.menus = menus)
+      tap(codes => this.menuCodes = codes)
     );
   }
 
@@ -70,12 +69,15 @@ export abstract class MenuOperatorProvider {
    * 用户可用操作
    */
   getOperatorCodes(): Observable<Set<string>> {
-    if (this.operators) {
-      return of(this.operators);
+    if (this.operatorCodes) {
+      return of(this.operatorCodes);
     }
-    return this.getUserOperatorCodes().pipe(
+    return this.getOperators().pipe(
+      map(ops =>
+        ops.filter(op => this.confirmOperator(op.code))
+          .map(op => op.code)),
       map(codes => new Set<string>(codes)),
-      tap(codes => this.operators = codes)
+      tap(codes => this.operatorCodes = codes)
     );
   }
 
@@ -84,7 +86,7 @@ export abstract class MenuOperatorProvider {
    * @param menus 菜单
    * @param codes 可访问菜单code
    */
-  private filterMenu(menus: MenuItem[], codes: Set<string>): MenuItem[] {
+  private filterMenu(menus: MenuItem[]): MenuItem[] {
     if (!menus) {
       return [];
     }
@@ -94,13 +96,13 @@ export abstract class MenuOperatorProvider {
         // 叶子节点
         if (!menu.configurable) {
           rets.push({...menu, children: null});
-        } else if (codes.has(menu.code) && !menu.disabled) {
+        } else if (this.confirmMenu(menu.code) && !menu.disabled) {
           rets.push({...menu, children: null});
         }
         continue;
       }
       // 非叶子节点
-      const child = this.filterMenu(menu.children, codes);
+      const child = this.filterMenu(menu.children);
       if (child.length > 0) {
         rets.push({...menu, children: child});
       }
@@ -109,19 +111,19 @@ export abstract class MenuOperatorProvider {
   }
 
   /**
-   * 可访问的菜单路由
-   * @param menus 可访问的菜单
+   * 可访问的菜单code
+   * @param menus 菜单
    */
-  private getUrls(menus: MenuItem[]): string[] {
+  private flatMenuToCode(menus: MenuItem[]): string[] {
     if (!menus) {
       return [];
     }
     const urls: string[] = [];
     for (const menu of menus) {
-      if (menu.path) {
-        urls.push(menu.path);
+      if (menu.code) {
+        urls.push(menu.code);
       }
-      urls.push(...this.getUrls(menu.children));
+      urls.push(...this.flatMenuToCode(menu.children));
     }
     return urls;
   }

@@ -1,4 +1,4 @@
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 
 import {HttpClient} from '@angular/common/http';
 import {MenuItem, MenuOperatorProvider, OperatorItem} from '@commons';
@@ -22,11 +22,11 @@ export class MenuOperatorProviderAdmin extends MenuOperatorProvider {
     return this.httpClient.get<OperatorItem[]>('/assets/admin-operator.json');
   }
 
-  protected getUserMenuCodes(): Observable<string[]> {
-    return of(['users', 'roles', 'roleCreate']);
+  protected confirmMenu(code: string): boolean {
+    return ['users', 'roles', 'roleCreate'].includes(code);
   }
 
-  protected getUserOperatorCodes(): Observable<string[]> {
-    return of(['userAdd']);
+  protected confirmOperator(code: string): boolean {
+    return ['userAdd'].includes(code);
   }
 }

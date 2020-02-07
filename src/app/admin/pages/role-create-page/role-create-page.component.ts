@@ -37,7 +37,6 @@ export class RoleCreatePageComponent implements OnInit {
   save() {
     const codes = {menus: [], operators: []};
     this.fetchMenuOperator(this.tree.getCheckedNodeList(), codes);
-    console.log(codes);
   }
 
   fetchMenuOperator(nodeList: NzTreeNode[], codes: { menus: string[], operators: string[] }) {

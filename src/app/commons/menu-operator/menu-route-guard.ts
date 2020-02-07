@@ -14,7 +14,7 @@ export abstract class MenuRouteGuard implements CanActivateChild {
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.menuProvider.getRouteCodes().pipe(
+    return this.menuProvider.getMenuCodes().pipe(
       map(urls => {
         if (!childRoute.data.code) {
           return true;
