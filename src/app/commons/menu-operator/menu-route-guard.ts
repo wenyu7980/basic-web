@@ -14,12 +14,13 @@ export abstract class MenuRouteGuard implements CanActivateChild {
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.menuProvider.getMenuUrls().pipe(
+    return this.menuProvider.getRouteCodes().pipe(
       map(urls => {
-        for (const url of urls) {
-          if (state.url.includes(url)) {
-            return true;
-          }
+        if (!childRoute.data.code) {
+          return true;
+        }
+        if (urls.has(childRoute.data.code)) {
+          return true;
         }
         this.failBack();
         return false;

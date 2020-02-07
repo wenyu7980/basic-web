@@ -7,8 +7,8 @@ import {OperatorItem} from '@commons';
  * 菜单提供器
  */
 export abstract class MenuOperatorProvider {
-  /** 可访问菜单路由 */
-  private urls: string[];
+  /** 可访问路由code */
+  private urls: Set<string>;
   /** 可访问菜单 */
   private menus: MenuItem[];
   /** 可操作code */
@@ -36,14 +36,14 @@ export abstract class MenuOperatorProvider {
   protected abstract getUserOperatorCodes(): Observable<string[]>;
 
   /**
-   * 菜单路由
+   * 路由code
    */
-  getMenuUrls(): Observable<string[]> {
+  getRouteCodes(): Observable<Set<string>> {
     if (this.urls) {
       return of(this.urls);
     }
-    return this.getMenuItems().pipe(
-      map(menus => this.getUrls(menus)),
+    return this.getUserMenuCodes().pipe(
+      map(codes => new Set<string>(codes)),
       tap(urls => this.urls = urls)
     );
   }
@@ -56,7 +56,9 @@ export abstract class MenuOperatorProvider {
       return of(this.menus);
     }
     return this.getUserMenuCodes().pipe(
-      switchMap((codes: string[]) =>
+      map(codes => new Set<string>(codes)),
+      tap(codes => this.urls = codes),
+      switchMap((codes: Set<string>) =>
         this.getMenus().pipe(
           map(menus => this.filterMenu(menus, codes))
         )),
@@ -78,25 +80,29 @@ export abstract class MenuOperatorProvider {
   }
 
   /**
-   * 可访问菜单赛选
+   * 可访问菜单
    * @param menus 菜单
    * @param codes 可访问菜单code
    */
-  private filterMenu(menus: MenuItem[], codes: string[]): MenuItem[] {
+  private filterMenu(menus: MenuItem[], codes: Set<string>): MenuItem[] {
     if (!menus) {
       return [];
     }
     const rets: MenuItem[] = [];
     for (const menu of menus) {
-      if (menu.publicFlag) {
-        rets.push(menu);
+      if (!menu.children || menu.children.length === 0) {
+        // 叶子节点
+        if (!menu.configurable) {
+          rets.push({...menu, children: null});
+        } else if (codes.has(menu.code) && !menu.disabled) {
+          rets.push({...menu, children: null});
+        }
         continue;
       }
+      // 非叶子节点
       const child = this.filterMenu(menu.children, codes);
       if (child.length > 0) {
         rets.push({...menu, children: child});
-      } else if (menu.code && codes.indexOf(menu.code) >= 0) {
-        rets.push({...menu, children: null});
       }
     }
     return rets;

@@ -23,7 +23,7 @@ export class MenuOperatorProviderAdmin extends MenuOperatorProvider {
   }
 
   protected getUserMenuCodes(): Observable<string[]> {
-    return of(['users', 'roles']);
+    return of(['users', 'roles', 'roleCreate']);
   }
 
   protected getUserOperatorCodes(): Observable<string[]> {

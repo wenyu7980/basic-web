@@ -10,6 +10,7 @@ import {NzButtonModule, NzLayoutModule, NzMessageModule, NzTableModule} from 'ng
 import {MenuOperatorProviderAdmin} from './menu-operator-provider-admin';
 import {MenuOperatorModule, MenuOperatorProvider} from '@commons';
 import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.component';
+import { RoleCreatePageComponent } from './pages/role-create-page/role-create-page.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.co
     HomePageComponent,
     AdminPageComponent,
     UserTablePageComponent,
-    RoleTablePageComponent
+    RoleTablePageComponent,
+    RoleCreatePageComponent
   ],
   imports: [
     CommonModule,

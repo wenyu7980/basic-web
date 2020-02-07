@@ -2,7 +2,7 @@
   {
     "title": "首页",
     "icon": "home",
-    "publicFlag": true,
+    "configurable": false,
     "path": "/admin/home"
   },
   {
@@ -12,12 +12,21 @@
       {
         "title": "用户管理",
         "path": "/admin/users",
-        "code": "users"
+        "code": "users",
+        "configurable": true
       },
       {
         "title": "权限角色管理",
         "path": "/admin/roles",
-        "code": "roles"
+        "code": "roles",
+        "configurable": true
+      },
+      {
+        "title": "创建角色",
+        "path": "/admin/roles/create",
+        "code": "roleCreate",
+        "configurable": true,
+        "disabled": true
       }
     ]
   }

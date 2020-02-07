@@ -5,6 +5,7 @@ import {AdminPageComponent} from './pages/admin-page/admin-page.component';
 import {UserTablePageComponent} from './pages/user-table-page/user-table-page.component';
 import {MenuGuardAdmin} from './menu-guard-admin';
 import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.component';
+import {RoleCreatePageComponent} from './pages/role-create-page/role-create-page.component';
 
 
 const routes: Routes = [
@@ -16,16 +17,19 @@ const routes: Routes = [
       {
         path: 'home',
         component: HomePageComponent
-      },
-      {
+      }, {
         path: 'users',
-        component: UserTablePageComponent
-      },
-      {
+        component: UserTablePageComponent,
+        data: {code: 'users'}
+      }, {
         path: 'roles',
-        component: RoleTablePageComponent
-      },
-      {
+        component: RoleTablePageComponent,
+        data: {code: 'roles'}
+      }, {
+        path: 'roles/create',
+        component: RoleCreatePageComponent,
+        data: {code: 'roleCreate'}
+      }, {
         path: '**',
         redirectTo: 'home'
       }
