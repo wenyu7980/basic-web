@@ -13,13 +13,19 @@
         "title": "用户管理",
         "path": "/admin/users",
         "code": "users",
-        "configurable": true
+        "configurable": true,
+        "operators": [
+          "userAdd"
+        ]
       },
       {
         "title": "权限角色管理",
         "path": "/admin/roles",
         "code": "roles",
-        "configurable": true
+        "configurable": true,
+        "operators": [
+          "roleAdd"
+        ]
       },
       {
         "title": "创建角色",

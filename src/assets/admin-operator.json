@@ -1,6 +1,10 @@
 [
   {
-    "code": "add",
+    "code": "userAdd",
     "name": "添加用户"
+  },
+  {
+    "code": "roleAdd",
+    "name": "添加角色"
   }
 ]
