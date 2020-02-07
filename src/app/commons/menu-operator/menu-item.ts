@@ -20,4 +20,6 @@ export interface MenuItem {
   selected?: boolean;
   /** 子菜单 */
   children?: MenuItem[];
+  /** 操作code */
+  operators?: string[];
 }

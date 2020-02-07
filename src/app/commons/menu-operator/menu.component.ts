@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem} from './menu-item';
 import {NavigationEnd, Router} from '@angular/router';
-import {MenuProvider} from './menu-provider';
+import {MenuOperatorProvider} from './menu-operator-provider';
 
 @Component({
   selector: 'app-menu',
@@ -13,7 +13,7 @@ export class MenuComponent implements OnInit {
   menus: MenuItem[];
 
   constructor(private router: Router,
-              private menuProvider: MenuProvider) {
+              private menuProvider: MenuOperatorProvider) {
   }
 
   ngOnInit() {

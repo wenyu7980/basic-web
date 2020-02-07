@@ -6,9 +6,9 @@ import {HomePageComponent} from './pages/home-page/home-page.component';
 import {AdminPageComponent} from './pages/admin-page/admin-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {UserTablePageComponent} from './pages/user-table-page/user-table-page.component';
-import {NzLayoutModule, NzMessageModule, NzTableModule} from 'ng-zorro-antd';
-import {MenuProviderAdmin} from './menu-provider-admin';
-import {MenuModule, MenuProvider} from '@commons';
+import {NzButtonModule, NzLayoutModule, NzMessageModule, NzTableModule} from 'ng-zorro-antd';
+import {MenuOperatorProviderAdmin} from './menu-operator-provider-admin';
+import {MenuOperatorModule, MenuOperatorProvider} from '@commons';
 import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.component';
 
 
@@ -22,14 +22,16 @@ import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.co
   imports: [
     CommonModule,
     AdminRoutingModule,
-    MenuModule,
+    MenuOperatorModule,
+    MenuOperatorModule,
     HttpClientModule,
     NzLayoutModule,
     NzMessageModule,
     NzTableModule,
+    NzButtonModule,
   ],
   providers: [
-    {provide: MenuProvider, useClass: MenuProviderAdmin}
+    {provide: MenuOperatorProvider, useClass: MenuOperatorProviderAdmin}
   ]
 })
 export class AdminModule {

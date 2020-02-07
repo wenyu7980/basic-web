@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MenuRouteGuard} from '@commons';
-import {MenuProviderAdmin} from './menu-provider-admin';
+import {MenuOperatorProviderAdmin} from './menu-operator-provider-admin';
 import {NzMessageService} from 'ng-zorro-antd';
 
 @Injectable({
@@ -8,7 +8,7 @@ import {NzMessageService} from 'ng-zorro-antd';
 })
 export class MenuGuardAdmin extends MenuRouteGuard {
 
-  constructor(private provider: MenuProviderAdmin,
+  constructor(private provider: MenuOperatorProviderAdmin,
               private messageServie: NzMessageService) {
     super(provider);
   }

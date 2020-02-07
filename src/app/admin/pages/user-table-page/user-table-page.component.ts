@@ -1,20 +1,28 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TableData, TablePage, TableQueryParam} from '@commons';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
+import {MenuOperators} from '../../../commons/menu-operator/operator.directive';
 
+@MenuOperators([
+  {code: 'userAdd', show: () => false}
+])
 @Component({
   selector: 'app-user-list-page',
   templateUrl: './user-table-page.component.html',
   styleUrls: ['./user-table-page.component.less']
 })
-export class UserTablePageComponent extends TablePage<UserItem> {
+export class UserTablePageComponent extends TablePage<UserItem> implements OnInit {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private httpClient: HttpClient
   ) {
     super(router, activatedRoute);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
   }
 
   protected setParam(param: TableQueryParam): boolean {

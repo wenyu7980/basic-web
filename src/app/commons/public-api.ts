@@ -1,3 +1,3 @@
-export * from './menu/menu-api';
+export * from './menu-operator/menu-operator-api';
 export * from './template/template-api';
 

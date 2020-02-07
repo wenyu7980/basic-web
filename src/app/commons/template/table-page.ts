@@ -5,9 +5,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, Subscriber} from 'rxjs';
 import {filter, switchMap} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
-import {OnInit} from '@angular/core';
+import {OnDestroy, OnInit} from '@angular/core';
 
-export abstract class TablePage<T> implements OnInit {
+export abstract class TablePage<T> implements OnInit, OnDestroy {
 
   /** 数据 */
   data: T[];
@@ -43,19 +43,29 @@ export abstract class TablePage<T> implements OnInit {
         this.navigate({...this.getParam(), index: this.pageIndex, size: this.pageSize});
         return false;
       }),
-      switchMap(queryParam => this.getData(queryParam))
+      switchMap(queryParam => {
+        this.loading = true;
+        return this.getData(queryParam);
+      })
     ).subscribe((body: TableData<T>) => {
       this.total = body.total;
       this.data = body.data;
+      this.loading = false;
     }, (error) => {
+      this.loading = false;
       this.errorHandler(error);
     });
     // 路径参数变化
     this.activated.queryParams
       .subscribe((param: TableQueryParam) => {
         this.subscriber.next(param);
-      }, (error) => this.errorHandler(error));
+      });
   }
+
+  ngOnDestroy(): void {
+    this.subscriber.complete();
+  }
+
 
   /**
    * 获取参数

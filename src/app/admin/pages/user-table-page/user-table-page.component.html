@@ -1,22 +1,21 @@
+<button nz-button nzType="primary" *appOperator="{code:'userAdd'}">添加用户</button>
+
 <nz-table style="background: white" #table nzSize="small" nzBordered
-          [nzData]="data" nzFrontPagination="false"
+          [nzData]="data" nzFrontPagination="false" [nzTotal]="total"
           [nzPageIndex]="pageIndex" (nzPageIndexChange)="pageIndexChange($event)"
           [nzPageSize]="pageSize" (nzPageSizeChange)="pageSizeChange($event)"
           [nzPageSizeOptions]="[10,20,30]" nzShowSizeChanger="true"
-          [nzLoading]="loading"
-          [nzTotal]="total">
+          [nzLoading]="loading">
   <thead>
   <tr>
     <th>序号</th>
     <th>用户名</th>
-    <th>Action</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let d of table.data;let i = index;">
-    <td>{{ i + 1}}</td>
+    <td>{{ i + 1 + this.pageSize * (this.pageIndex - 1)}}</td>
     <td>{{ d.username }}</td>
-    <td>详情</td>
   </tr>
   </tbody>
 </nz-table>
