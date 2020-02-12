@@ -9,11 +9,11 @@ import {NzMessageService} from 'ng-zorro-antd';
 export class MenuGuardAdmin extends MenuRouteGuard {
 
   constructor(private provider: MenuOperatorProviderAdmin,
-              private messageServie: NzMessageService) {
+              private messageService: NzMessageService) {
     super(provider);
   }
 
   protected failBack() {
-    this.messageServie.error('访问页面的权限不足，请联系管理员');
+    this.messageService.error('访问页面的权限不足，请联系管理员');
   }
 }

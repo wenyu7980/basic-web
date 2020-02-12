@@ -21,6 +21,12 @@
     "paths": {
       "@commons": [
         "src/app/commons/public-api.ts"
+      ],
+      "@rest-models": [
+        "src/app/rest/models/models"
+      ],
+      "@rest": [
+        "src/app/rest/services/service-api"
       ]
     }
   },

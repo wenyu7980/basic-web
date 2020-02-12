@@ -1,5 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {ErrorHandlerService, LoginService} from '@rest';
+import {LoginResult} from '@rest-models';
+import {HttpErrorResponse} from '@angular/common/http';
+import {NzMessageService} from 'ng-zorro-antd';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {LoginResultCache} from '@commons';
 
 @Component({
   selector: 'app-login-page',
@@ -8,7 +14,22 @@ import {Router} from '@angular/router';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private router: Router) {
+  form: FormGroup;
+
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private messageService: NzMessageService,
+    private fb: FormBuilder,
+    private resultCache: LoginResultCache,
+    private errorService: ErrorHandlerService,
+  ) {
+    this.form = this.fb.group(
+      {
+        username: [null, [Validators.required]],
+        password: [null, [Validators.required]]
+      }
+    );
   }
 
   ngOnInit() {
@@ -18,6 +39,20 @@ export class LoginPageComponent implements OnInit {
    * 用户登录
    */
   login() {
-    this.router.navigate(['/admin/home']);
+    if (this.form.invalid) {
+      this.form.markAsDirty();
+      this.messageService.error('请输入正确的用户名密码');
+      return;
+    }
+    this.loginService.login(
+      {
+        username: this.form.value.username,
+        password: this.form.value.password
+      }).subscribe((result: LoginResult) => {
+      this.resultCache.setValue(result);
+      this.router.navigate(['/admin/home']);
+    }, (err: HttpErrorResponse) => {
+      this.errorService.handler(err, '/login');
+    });
   }
 }

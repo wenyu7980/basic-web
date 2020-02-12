@@ -1,5 +1,5 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
-import {OperatorItem} from './operator-item';
+import {OperatorItem} from './menu-operator-item';
 import {MenuOperatorProvider} from './menu-operator-provider';
 
 
@@ -11,25 +11,14 @@ const OPERATORS = new Map<string, OperatorItem>();
 export class OperatorDirective {
   @Input('appOperator')
   set condition(data: OperatorData) {
-    this.provider.getOperatorCodes()
-      .subscribe(codes => {
-          if (!codes.has(data.code)) {
-            this.viewContainer.clear();
-            return;
-          }
-          const item = OPERATORS.get(data.code);
-          if (item.show) {
-            if (!item.show(data.data)) {
-              this.viewContainer.clear();
-              return;
-            }
-          }
-          this.viewContainer.clear();
-          // 创建模板对应的内嵌视图
-          this.viewContainer.createEmbeddedView(this.templateRef);
-
-        }
-      );
+    this.viewContainer.clear();
+    if (this.provider.confirmOperator(data.code)) {
+      const item = OPERATORS.get(data.code);
+      if (!item.show || item.show(data.data)) {
+        // 创建模板对应的内嵌视图
+        this.viewContainer.createEmbeddedView(this.templateRef);
+      }
+    }
   }
 
   constructor(

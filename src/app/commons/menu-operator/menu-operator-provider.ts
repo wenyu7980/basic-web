@@ -1,6 +1,6 @@
-import {MenuItem} from './menu-item';
+import {MenuOperatorItem} from './menu-operator-item';
 import {Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {OperatorItem} from '@commons';
 
 /**
@@ -8,7 +8,7 @@ import {OperatorItem} from '@commons';
  */
 export abstract class MenuOperatorProvider {
   /** 可访问菜单 */
-  private menus: MenuItem[];
+  private menus: MenuOperatorItem[];
   /** 可访问菜单code */
   private menuCodes: Set<string>;
   /** 可操作code */
@@ -17,7 +17,7 @@ export abstract class MenuOperatorProvider {
   /**
    * 获取菜单
    */
-  protected abstract getMenus(): Observable<MenuItem[]>;
+  protected abstract getMenus(): Observable<MenuOperatorItem[]>;
 
   /**
    * 所有操作
@@ -28,19 +28,19 @@ export abstract class MenuOperatorProvider {
    * 确认菜单
    * @param code 菜单code
    */
-  protected abstract confirmMenu(code: string): boolean;
+  abstract confirmMenu(code: string): boolean;
 
   /**
    * 确认操作
    * @param code 操作code
    */
-  protected abstract confirmOperator(code: string): boolean;
+  abstract confirmOperator(code: string): boolean;
 
 
   /**
    * 可访问菜单
    */
-  getMenuItems(): Observable<MenuItem[]> {
+  getMenuItems(): Observable<MenuOperatorItem[]> {
     if (this.menus) {
       return of(this.menus);
     }
@@ -50,81 +50,39 @@ export abstract class MenuOperatorProvider {
   }
 
   /**
-   * 菜单code
-   */
-  getMenuCodes(): Observable<Set<string>> {
-    if (this.menuCodes) {
-      return of(this.menuCodes);
-    }
-    return this.getMenus().pipe(
-      map(menus => this.flatMenuToCode(menus)),
-      map(codes =>
-        codes.filter(code => this.confirmMenu(code))),
-      map(codes => new Set<string>(codes)),
-      tap(codes => this.menuCodes = codes)
-    );
-  }
-
-  /**
-   * 用户可用操作
-   */
-  getOperatorCodes(): Observable<Set<string>> {
-    if (this.operatorCodes) {
-      return of(this.operatorCodes);
-    }
-    return this.getOperators().pipe(
-      map(ops =>
-        ops.filter(op => this.confirmOperator(op.code))
-          .map(op => op.code)),
-      map(codes => new Set<string>(codes)),
-      tap(codes => this.operatorCodes = codes)
-    );
-  }
-
-  /**
    * 可访问菜单
    * @param menus 菜单
    * @param codes 可访问菜单code
    */
-  private filterMenu(menus: MenuItem[]): MenuItem[] {
+  private filterMenu(menus: MenuOperatorItem[]): MenuOperatorItem[] {
     if (!menus) {
       return [];
     }
-    const rets: MenuItem[] = [];
+    const rets: MenuOperatorItem[] = [];
     for (const menu of menus) {
       if (!menu.children || menu.children.length === 0) {
-        // 叶子节点
-        if (!menu.configurable) {
+        // 叶子
+        if (menu.disabled) {
+          // 不展示的
+        } else if (!menu.configurable) {
+          // 不可配置，全部展示
           rets.push({...menu, children: null});
-        } else if (this.confirmMenu(menu.code) && !menu.disabled) {
+        } else if (this.confirmMenu(menu.code)) {
+          // 有权限
           rets.push({...menu, children: null});
         }
-        continue;
+      } else {
+        // 非叶子
+        const child = this.filterMenu(menu.children);
+        if (child.length > 0) {
+          rets.push({...menu, children: child});
+        } else if (this.confirmMenu(menu.code)
+          && menu.children.every(item => item.disabled)) {
+          rets.push({...menu, children: null});
+        }
       }
-      // 非叶子节点
-      const child = this.filterMenu(menu.children);
-      if (child.length > 0) {
-        rets.push({...menu, children: child});
-      }
+
     }
     return rets;
-  }
-
-  /**
-   * 可访问的菜单code
-   * @param menus 菜单
-   */
-  private flatMenuToCode(menus: MenuItem[]): string[] {
-    if (!menus) {
-      return [];
-    }
-    const urls: string[] = [];
-    for (const menu of menus) {
-      if (menu.code) {
-        urls.push(menu.code);
-      }
-      urls.push(...this.flatMenuToCode(menu.children));
-    }
-    return urls;
   }
 }

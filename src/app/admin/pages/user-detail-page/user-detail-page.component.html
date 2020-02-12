@@ -1,0 +1,15 @@
+<div class="detail-page" *ngIf="detail">
+  <div class="detail-page-title">用户:{{detail.username}}
+    <span *ngIf="detail.deletedFlag" style="color: red;">(已删除)</span></div>
+  <div class="detail-page-operators">
+    <button nz-button class="detail-page-operator" nzType="primary"
+            *appOperator="{code:'userRoleSet',data:detail}">
+      设置角色
+    </button>
+    <button nz-button class="detail-page-operator" nzType="danger"
+            *appOperator="{code:'userDelete',data:detail}"
+            (click)="removeUser()">
+      删除
+    </button>
+  </div>
+</div>

@@ -1,10 +1,10 @@
 <div class="login-page">
   <div class="login">
-    <form nz-form>
+    <form nz-form [formGroup]="form">
       <nz-form-item>
         <nz-form-control nzErrorTip="请输入用户名">
           <nz-input-group nzPrefixIcon="user">
-            <input type="text" nz-input formControlName="userName" placeholder="用户名"/>
+            <input type="text" nz-input formControlName="username" placeholder="用户名"/>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>

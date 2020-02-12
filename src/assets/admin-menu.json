@@ -12,27 +12,80 @@
       {
         "title": "用户管理",
         "path": "/admin/users",
-        "code": "users",
+        "code": "userTablePage",
         "configurable": true,
+        "children": [
+          {
+            "title": "用户详情",
+            "code": "userDetailPage",
+            "configurable": true,
+            "disabled": true,
+            "permissions": [
+              {
+                "method": "GET",
+                "path": "/users/*"
+              }
+            ],
+            "operators": [
+              "userDelete",
+              "userRoleSet"
+            ]
+          }
+        ],
         "operators": [
           "userAdd"
+        ],
+        "permissions": [
+          {
+            "method": "GET",
+            "path": "/users"
+          }
         ]
       },
       {
-        "title": "权限角色管理",
+        "title": "角色管理",
         "path": "/admin/roles",
-        "code": "roles",
+        "code": "roleTablePage",
         "configurable": true,
+        "children": [
+          {
+            "title": "创建角色",
+            "code": "roleAddPage",
+            "configurable": true,
+            "disabled": true,
+            "permissions": [
+              {
+                "method": "POST",
+                "path": "/roles"
+              }
+            ]
+          },
+          {
+            "title": "修改角色",
+            "code": "roleEditPage",
+            "configurable": true,
+            "disabled": true,
+            "permissions": [
+              {
+                "method": "GET",
+                "path": "/roles/*"
+              },
+              {
+                "method": "PUT",
+                "path": "/roles"
+              }
+            ]
+          }
+        ],
         "operators": [
           "roleAdd"
+        ],
+        "permissions": [
+          {
+            "method": "GET",
+            "path": "/roles"
+          }
         ]
-      },
-      {
-        "title": "创建角色",
-        "path": "/admin/roles/create",
-        "code": "roleCreate",
-        "configurable": true,
-        "disabled": true
       }
     ]
   }

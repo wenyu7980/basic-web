@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MenuItem} from './menu-item';
+import {MenuOperatorItem} from './menu-operator-item';
 import {NavigationEnd, Router} from '@angular/router';
 import {MenuOperatorProvider} from './menu-operator-provider';
 
@@ -10,7 +10,7 @@ import {MenuOperatorProvider} from './menu-operator-provider';
 })
 export class MenuComponent implements OnInit {
 
-  menus: MenuItem[];
+  menus: MenuOperatorItem[];
 
   constructor(private router: Router,
               private menuProvider: MenuOperatorProvider) {
@@ -28,7 +28,7 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  private updateMenu(url: string, menus: MenuItem[]): boolean {
+  private updateMenu(url: string, menus: MenuOperatorItem[]): boolean {
     let open = false;
     for (const menu of menus) {
       if (url.startsWith(menu.path)) {
@@ -46,11 +46,11 @@ export class MenuComponent implements OnInit {
     return open;
   }
 
-  private menuHandler(menus: MenuItem[], level: number = 0): MenuItem[] {
+  private menuHandler(menus: MenuOperatorItem[], level: number = 0): MenuOperatorItem[] {
     if (!menus) {
       return null;
     }
-    const rets: MenuItem[] = [];
+    const rets: MenuOperatorItem[] = [];
     for (const menu of menus) {
       rets.push({
         ...menu,

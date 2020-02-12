@@ -1,32 +1,70 @@
 import {Component, OnInit} from '@angular/core';
-import {TableData, TablePage, TableQueryParam} from '@commons';
+import {MenuOperators, TableData, TablePage, TableQueryParam, Validators} from '@commons';
 import {ActivatedRoute, Router} from '@angular/router';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {MenuOperators} from '../../../commons/menu-operator/operator.directive';
+import {HttpErrorResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {NzMessageService} from 'ng-zorro-antd';
+import {debounceTime, map} from 'rxjs/operators';
+import {ErrorHandlerService, UserService} from '@rest';
+import {PageBody, User, UserListDetail} from '@rest-models';
 
 @MenuOperators([
-  {code: 'userAdd', show: () => false}
+  {code: 'userAdd', show: () => true}
 ])
 @Component({
   selector: 'app-user-list-page',
   templateUrl: './user-table-page.component.html',
   styleUrls: ['./user-table-page.component.less']
 })
-export class UserTablePageComponent extends TablePage<UserItem> implements OnInit {
+export class UserTablePageComponent extends TablePage<UserListDetail> implements OnInit {
+  userAddModal: {
+    form: FormGroup,
+    visible: boolean,
+    loading: boolean
+  };
+
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
-              private httpClient: HttpClient
+              private fb: FormBuilder,
+              private messageService: NzMessageService,
+              private errorService: ErrorHandlerService,
+              private userService: UserService,
   ) {
     super(router, activatedRoute);
+    this.userAddModal = {
+      visible: false,
+      form: this.fb.group({
+        username: [null, [
+          Validators.required('用户名'),
+          Validators.size('用户名', 6, 18)
+        ]],
+        password: [null, [
+          Validators.required('密码'),
+          Validators.size('密码', 6, 18)
+        ]],
+        confirm: [null, [Validators.required('确认密码'),
+          Validators.size('确认密码', 6, 18)
+        ]]
+      }),
+      loading: false
+    };
   }
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.userAddModal.form.get('confirm')
+      .valueChanges.pipe(debounceTime(100))
+      .subscribe(value => {
+        if (this.userAddModal.form.value.password !== value) {
+          this.userAddModal.form.get('confirm')
+            .setErrors({confirm: '密码与确认密码不一致'});
+        }
+      });
   }
 
   protected setParam(param: TableQueryParam): boolean {
-    return true;
+    return false;
   }
 
   protected getParam(): TableQueryParam {
@@ -34,17 +72,37 @@ export class UserTablePageComponent extends TablePage<UserItem> implements OnIni
   }
 
   protected getData(param: TableQueryParam):
-    Observable<TableData<UserItem> | HttpErrorResponse> {
-    return of({total: 100, data: [{username: `username,index:${param.index},size:${param.size}`}]});
+    Observable<TableData<UserListDetail> | HttpErrorResponse> {
+    return this.userService.getUsers({detail: true, ...param, index: param.index - 1}).pipe(
+      map((body: PageBody<UserListDetail>): TableData<UserListDetail> => {
+        return {
+          total: body.count,
+          data: body.data
+        };
+      })
+    );
   }
 
-  protected errorHandler(error: HttpErrorResponse) {
-    console.log(error);
+  protected errorHandler(err: HttpErrorResponse) {
+    this.errorService.handler(err);
   }
 
-}
-
-interface UserItem {
-  /** 用户名 */
-  username: string;
+  userAdd() {
+    if (this.userAddModal.form.invalid) {
+      this.userAddModal.form.markAsDirty();
+      return;
+    }
+    this.userAddModal.loading = true;
+    const value = this.userAddModal.form.getRawValue();
+    this.userService.addUser({
+      username: value.username,
+      password: value.password
+    }).subscribe((user: User) => {
+      this.userAddModal.visible = false;
+      this.userAddModal.loading = false;
+      this.router.navigate(['/admin/users', user.id]);
+    }, err => {
+      this.errorService.handler(err, '/admin/users');
+    });
+  }
 }

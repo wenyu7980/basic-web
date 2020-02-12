@@ -2,7 +2,7 @@
  * table page模板
  */
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscriber} from 'rxjs';
+import {Observable, Subscriber, Subscription} from 'rxjs';
 import {filter, switchMap} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OnDestroy, OnInit} from '@angular/core';
@@ -21,6 +21,7 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
   loading: boolean;
   /** 汇总路径参数变化 */
   private subscriber: Subscriber<TableQueryParam>;
+  private subscription: Subscription;
 
   constructor(private route: Router,
               private activated: ActivatedRoute,
@@ -31,30 +32,29 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // 参数变化处理
-    const observable =
+    this.subscription =
       new Observable((subscriber: Subscriber<TableQueryParam>) => {
         this.subscriber = subscriber;
-      });
-    observable.pipe(
-      filter(queryParam => {
-        if (this.setIndexPage(queryParam.index, queryParam.size) && this.setParam(queryParam)) {
+      }).pipe(
+        filter(queryParam => {
+          if (this.setIndexPage(queryParam.index, queryParam.size) || this.setParam(queryParam)) {
+            this.navigate({...this.getParam(), index: this.pageIndex, size: this.pageSize});
+            return false;
+          }
           return true;
-        }
-        this.navigate({...this.getParam(), index: this.pageIndex, size: this.pageSize});
-        return false;
-      }),
-      switchMap(queryParam => {
-        this.loading = true;
-        return this.getData(queryParam);
-      })
-    ).subscribe((body: TableData<T>) => {
-      this.total = body.total;
-      this.data = body.data;
-      this.loading = false;
-    }, (error) => {
-      this.loading = false;
-      this.errorHandler(error);
-    });
+        }),
+        switchMap(queryParam => {
+          this.loading = true;
+          return this.getData(queryParam);
+        })
+      ).subscribe((body: TableData<T>) => {
+        this.total = body.total;
+        this.data = body.data;
+        this.loading = false;
+      }, (error) => {
+        this.loading = false;
+        this.errorHandler(error);
+      });
     // 路径参数变化
     this.activated.queryParams
       .subscribe((param: TableQueryParam) => {
@@ -63,7 +63,7 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriber.complete();
+    this.subscription.unsubscribe();
   }
 
 
@@ -73,10 +73,10 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
   protected abstract getParam(): TableQueryParam;
 
   /**
-   * 设置参数
+   * 设置参数，同时将不合法的参数设置成合法的
    * @param param 参数
-   * @return 如果参数都合法，则返回true
-   *         如果参数有不合法的，则设定好变量后，返回false
+   * @return 如果参数设置前后有变化，则返回true
+   *         如果参数设置前后无变化，返回false
    */
   protected abstract setParam(param: TableQueryParam): boolean;
 
@@ -90,13 +90,13 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
    * 数据请求错误处理
    * @param error 错误信息
    */
-  protected abstract errorHandler(error: HttpErrorResponse);
+  protected abstract errorHandler(err: HttpErrorResponse);
 
   private setIndexPage(index: number, size: number): boolean {
     if (+index && +size) {
       this.pageIndex = index;
       this.pageSize = size;
-      return true;
+      return false;
     }
     if (!+index) {
       this.pageIndex = 1;
@@ -104,7 +104,7 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
     if (!+size) {
       this.pageSize = this.PAGE_SIZE;
     }
-    return false;
+    return true;
   }
 
   protected navigate(param: TableQueryParam) {

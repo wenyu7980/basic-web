@@ -5,7 +5,8 @@ import {AdminPageComponent} from './pages/admin-page/admin-page.component';
 import {UserTablePageComponent} from './pages/user-table-page/user-table-page.component';
 import {MenuGuardAdmin} from './menu-guard-admin';
 import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.component';
-import {RoleCreatePageComponent} from './pages/role-create-page/role-create-page.component';
+import {RoleSavePageComponent} from './pages/role-save-page/role-save-page.component';
+import {UserDetailPageComponent} from './pages/user-detail-page/user-detail-page.component';
 
 
 const routes: Routes = [
@@ -20,18 +21,23 @@ const routes: Routes = [
       }, {
         path: 'users',
         component: UserTablePageComponent,
-        data: {code: 'users'}
+        data: {code: 'userTablePage'}
+      }, {
+        path: 'users/:id',
+        component: UserDetailPageComponent,
+        data: {code: 'userDetailPage'}
       }, {
         path: 'roles',
         component: RoleTablePageComponent,
-        data: {code: 'roles'}
+        data: {code: 'roleTablePage'}
       }, {
         path: 'roles/create',
-        component: RoleCreatePageComponent,
-        data: {code: 'roleCreate'}
+        component: RoleSavePageComponent,
+        data: {code: 'roleAddPage'}
       }, {
-        path: '**',
-        redirectTo: 'home'
+        path: 'roles/:id/edit',
+        component: RoleSavePageComponent,
+        data: {code: 'roleEditPage'}
       }
     ]
   }

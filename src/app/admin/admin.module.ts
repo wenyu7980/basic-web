@@ -6,27 +6,39 @@ import {HomePageComponent} from './pages/home-page/home-page.component';
 import {AdminPageComponent} from './pages/admin-page/admin-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {UserTablePageComponent} from './pages/user-table-page/user-table-page.component';
-import {NzButtonModule, NzCheckboxModule, NzLayoutModule, NzMessageModule, NzTableModule, NzTreeModule} from 'ng-zorro-antd';
+import {
+  NzButtonModule,
+  NzCheckboxModule,
+  NzFormModule,
+  NzInputModule,
+  NzLayoutModule,
+  NzMessageModule,
+  NzModalModule,
+  NzTableModule,
+  NzTreeModule
+} from 'ng-zorro-antd';
 import {MenuOperatorProviderAdmin} from './menu-operator-provider-admin';
-import {MenuOperatorModule, MenuOperatorProvider} from '@commons';
 import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.component';
-import {RoleCreatePageComponent} from './pages/role-create-page/role-create-page.component';
-import {FormsModule} from '@angular/forms';
+import {RoleSavePageComponent} from './pages/role-save-page/role-save-page.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MenuOperatorModule, MenuOperatorProvider, ValidatorErrorPipe} from '@commons';
+import { UserDetailPageComponent } from './pages/user-detail-page/user-detail-page.component';
 
 
 @NgModule({
   declarations: [
+    ValidatorErrorPipe,
     HomePageComponent,
     AdminPageComponent,
     UserTablePageComponent,
     RoleTablePageComponent,
-    RoleCreatePageComponent
+    RoleSavePageComponent,
+    UserDetailPageComponent,
   ],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     AdminRoutingModule,
-    MenuOperatorModule,
     MenuOperatorModule,
     HttpClientModule,
     NzLayoutModule,
@@ -35,6 +47,9 @@ import {FormsModule} from '@angular/forms';
     NzButtonModule,
     NzCheckboxModule,
     NzTreeModule,
+    NzFormModule,
+    NzInputModule,
+    NzModalModule,
   ],
   providers: [
     {provide: MenuOperatorProvider, useClass: MenuOperatorProviderAdmin}

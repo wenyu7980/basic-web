@@ -1,10 +1,9 @@
 import {ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
 import {MenuOperatorProvider} from './menu-operator-provider';
-import {map} from 'rxjs/operators';
 
 export abstract class MenuRouteGuard implements CanActivateChild {
-  constructor(private menuProvider: MenuOperatorProvider) {
+  protected constructor(private menuProvider: MenuOperatorProvider) {
   }
 
   /**
@@ -14,17 +13,6 @@ export abstract class MenuRouteGuard implements CanActivateChild {
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.menuProvider.getMenuCodes().pipe(
-      map(urls => {
-        if (!childRoute.data.code) {
-          return true;
-        }
-        if (urls.has(childRoute.data.code)) {
-          return true;
-        }
-        this.failBack();
-        return false;
-      })
-    );
+    return this.menuProvider.confirmMenu(childRoute.data.code);
   }
 }

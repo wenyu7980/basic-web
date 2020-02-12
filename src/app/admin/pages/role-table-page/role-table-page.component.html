@@ -1,2 +1,20 @@
 <button nz-button nzType="primary" (click)="roleCreate()">创建角色</button>
-<p>role-table-page works!</p>
+<nz-table #table nzSize="small" nzBordered
+          [nzData]="data" nzFrontPagination="false" [nzTotal]="total"
+          [nzPageIndex]="pageIndex" (nzPageIndexChange)="pageIndexChange($event)"
+          [nzPageSize]="pageSize" (nzPageSizeChange)="pageSizeChange($event)"
+          [nzPageSizeOptions]="[10,20,30]" nzShowSizeChanger="true"
+          [nzLoading]="loading">
+  <thead>
+  <tr>
+    <th>序号</th>
+    <th>角色名</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let d of table.data;let i = index;">
+    <td>{{ i + 1 + this.pageSize * (this.pageIndex - 1)}}</td>
+    <td>{{ d.name }}</td>
+  </tr>
+  </tbody>
+</nz-table>

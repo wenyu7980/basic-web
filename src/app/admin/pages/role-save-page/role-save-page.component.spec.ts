@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoleCreatePageComponent } from './role-create-page.component';
+import { RoleSavePageComponent } from './role-save-page.component';
 
-describe('RoleCreatePageComponent', () => {
-  let component: RoleCreatePageComponent;
-  let fixture: ComponentFixture<RoleCreatePageComponent>;
+describe('RoleSavePageComponent', () => {
+  let component: RoleSavePageComponent;
+  let fixture: ComponentFixture<RoleSavePageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RoleCreatePageComponent ]
+      declarations: [ RoleSavePageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RoleCreatePageComponent);
+    fixture = TestBed.createComponent(RoleSavePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
