@@ -7,7 +7,7 @@ import {filter, switchMap} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OnDestroy, OnInit} from '@angular/core';
 
-export abstract class TablePage<T> implements OnInit, OnDestroy {
+export abstract class TableTemplate<T> implements OnInit, OnDestroy {
 
   /** 数据 */
   data: T[];
@@ -38,7 +38,11 @@ export abstract class TablePage<T> implements OnInit, OnDestroy {
       }).pipe(
         filter(queryParam => {
           if (this.setIndexPage(queryParam.index, queryParam.size) || this.setParam(queryParam)) {
-            this.navigate({...this.getParam(), index: this.pageIndex, size: this.pageSize});
+            this.navigate({
+              ...this.getParam(),
+              index: this.pageIndex,
+              size: this.pageSize
+            });
             return false;
           }
           return true;
