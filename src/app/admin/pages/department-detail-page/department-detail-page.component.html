@@ -1,7 +1,11 @@
-<div *ngIf="detail">
-  <div>{{detail.name}}</div>
+<div class="detail-page" *ngIf="detail">
+  <div class="detail-page-title">部门:{{detail.name}}
+    <span *ngIf="detail.deletedFlag" style="color: red;">(已删除)</span></div>
   <nz-tabset [(nzSelectedIndex)]="selectedIndex"
              (nzSelectedIndexChange)="selectIndexChange($event)">
     <nz-tab nzTitle="详情"></nz-tab>
+    <nz-tab nzTitle="下级部门">
+      <app-department-tab tab="sub" [parentId]="detail.id"></app-department-tab>
+    </nz-tab>
   </nz-tabset>
 </div>

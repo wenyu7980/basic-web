@@ -26,6 +26,8 @@ import {MenuOperatorModule, MenuOperatorProvider, ValidatorErrorPipe} from '@com
 import {UserDetailPageComponent} from './pages/user-detail-page/user-detail-page.component';
 import {DepartmentTabComponent} from './tabs/department-tab/department-tab.component';
 import { DepartmentDetailPageComponent } from './pages/department-detail-page/department-detail-page.component';
+import { DepartmentTablePageComponent } from './pages/department-table-page/department-table-page.component';
+import { RoleDetailPageComponent } from './pages/role-detail-page/role-detail-page.component';
 
 
 @NgModule({
@@ -39,6 +41,8 @@ import { DepartmentDetailPageComponent } from './pages/department-detail-page/de
     UserDetailPageComponent,
     DepartmentTabComponent,
     DepartmentDetailPageComponent,
+    DepartmentTablePageComponent,
+    RoleDetailPageComponent,
   ],
   imports: [
     CommonModule,

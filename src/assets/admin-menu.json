@@ -24,6 +24,10 @@
               {
                 "method": "GET",
                 "path": "/users/*"
+              },
+              {
+                "method": "GET",
+                "path": "/departments/*"
               }
             ],
             "operators": [
@@ -40,6 +44,35 @@
             "method": "GET",
             "path": "/users"
           }
+        ]
+      },
+      {
+        "title": "部门管理",
+        "path": "/admin/departments",
+        "code": "departmentTablePage",
+        "configurable": true,
+        "children": [
+          {
+            "title": "部门详情",
+            "code": "departmentDetailPage",
+            "configurable": true,
+            "disabled": true,
+            "permissions": [
+              {
+                "method": "GET",
+                "path": "/departments/*"
+              }
+            ]
+          }
+        ],
+        "permissions": [
+          {
+            "method": "GET",
+            "path": "/departments"
+          }
+        ],
+        "operators": [
+          "departmentAdd"
         ]
       },
       {
@@ -72,7 +105,7 @@
               },
               {
                 "method": "PUT",
-                "path": "/roles"
+                "path": "/roles/*"
               }
             ]
           }
@@ -86,12 +119,6 @@
             "path": "/roles"
           }
         ]
-      },
-      {
-        "title": "部门管理",
-        "path": "/admin/departments",
-        "code": "departmentTablePage",
-        "configurable": true
       }
     ]
   }

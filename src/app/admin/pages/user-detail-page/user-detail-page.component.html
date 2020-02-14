@@ -16,10 +16,10 @@
              [(nzSelectedIndex)]="selectedIndex">
     <nz-tab nzTitle="详情">详情</nz-tab>
     <nz-tab nzTitle="所属部门">
-      <app-user-department-tab tab="user" [userId]="detail.id"></app-user-department-tab>
+      <app-department-tab tab="user" [userId]="detail.id"></app-department-tab>
     </nz-tab>
     <nz-tab nzTitle="所管理部门">
-      <app-user-department-tab tab="admin" [adminId]="detail.id"></app-user-department-tab>
+      <app-department-tab tab="admin" [adminId]="detail.id"></app-department-tab>
     </nz-tab>
     <nz-tab nzTitle="详情">详情</nz-tab>
   </nz-tabset>

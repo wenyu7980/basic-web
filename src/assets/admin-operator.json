@@ -1,19 +1,63 @@
 [
   {
     "code": "userAdd",
-    "name": "添加用户"
+    "name": "添加用户",
+    "permissions": [
+      {
+        "method": "POST",
+        "path": "/users"
+      }
+    ]
+  },
+  {
+    "code": "departmentAdd",
+    "name": "添加部门",
+    "permissions": [
+      {
+        "method": "POST",
+        "path": "/departments"
+      }
+    ]
   },
   {
     "code": "roleAdd",
-    "name": "添加角色"
+    "name": "添加角色",
+    "permissions": [
+      {
+        "method": "POST",
+        "path": "/roles"
+      }
+    ]
   },
   {
     "code": "roleModify",
-    "name": "修改角色"
+    "name": "修改角色",
+    "permissions": [
+      {
+        "method": "PUT",
+        "path": "/roles/*"
+      }
+    ]
+  },
+  {
+    "code": "roleDelete",
+    "name": "修改角色",
+    "permissions": [
+      {
+        "method": "DELETE",
+        "path": "/roles/*"
+      }
+    ]
   },
   {
     "code": "userDelete",
-    "name": "删除用户"
+    "name": "删除用户",
+    "permissions": [
+      {
+        "method": "DELETE",
+        "path": "/users/*"
+      }
+    ]
   },
   {
     "code": "userRoleSet",

@@ -8,7 +8,7 @@ import {DepartmentService, ErrorHandlerService} from '@rest';
 import {map} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-user-department-tab',
+  selector: 'app-department-tab',
   templateUrl: './department-tab.component.html',
   styleUrls: ['./department-tab.component.less']
 })

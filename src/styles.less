@@ -23,9 +23,7 @@
 @primary-2: color(~`colorPalette('@{primary-color}', 2) `); // replace tint(@primary-color, 80%)
 @primary-3: color(~`colorPalette('@{primary-color}', 3) `); // unused
 @primary-4: color(~`colorPalette('@{primary-color}', 4) `); // unused
-@primary-5: color(
-  ~`colorPalette('@{primary-color}', 5) `
-); // color used to control the text color in many active and hover states, replace tint(@primary-color, 20%)
+@primary-5: color(~`colorPalette('@{primary-color}', 5) `); // color used to control the text color in many active and hover states, replace tint(@primary-color, 20%)
 @primary-6: @primary-color; // color used to control the text color of active buttons, don't use, use @primary-color
 @primary-7: color(~`colorPalette('@{primary-color}', 7) `); // replace shade(@primary-color, 5%)
 @primary-8: color(~`colorPalette('@{primary-color}', 8) `); // unused
@@ -682,3 +680,47 @@
 @typography-title-font-weight: 600;
 
 /* You can add global styles to this file, and also import other style files */
+/** 详情页 */
+.detail-page {
+  height: 100%;
+
+  .detail-page-title {
+    font-size: 20px;
+    font-weight: bold;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .detail-page-operators {
+    background: white;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    overflow: auto;
+
+    .detail-page-operator {
+      float: right;
+      margin: 10px;
+    }
+  }
+}
+
+/** 列表页 */
+.table-page {
+  .operators {
+    background: white;
+    overflow: auto;
+    border-radius: 10px;
+
+    .operator {
+      float: right;
+      margin: 10px;
+    }
+  }
+
+  nz-table {
+    border-radius: 10px;
+    margin-top: 10px;
+    background: white;
+  }
+}

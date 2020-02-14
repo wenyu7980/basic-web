@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {MenuOperatorItem, OperatorItem, PermissionItem} from '@commons';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
+import {RoleService} from '../../../rest/services/role.service';
+import {ErrorHandlerService} from '@rest';
 
 @Component({
   selector: 'app-role-create-page',
@@ -23,7 +25,9 @@ export class RoleSavePageComponent implements OnInit {
 
   constructor(private httpClient: HttpClient,
               private activatedRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private roleService: RoleService,
+              private errorHandlerService: ErrorHandlerService) {
   }
 
   ngOnInit() {
@@ -47,22 +51,43 @@ export class RoleSavePageComponent implements OnInit {
         }
       );
     /** 数据获取 */
-    this.activatedRoute.paramMap
+    this.activatedRoute.queryParamMap
       .pipe(
         debounceTime(500),
-        filter(params => params.has('id'))
+        filter(params => params.has('id')),
+        switchMap((params) => {
+          return this.roleService.getRole(params.get('id'), true);
+        })
       )
-      .subscribe((params) => {
-        this.checkedKeys = ['users', 'roleAdd'];
-        console.log(this.checkedKeys);
+      .subscribe((detail) => {
+        const checkedKeys = this.tree.getCheckedNodeList().map(node => node.key);
+        this.checkedKeys = [...checkedKeys, ...detail.menuCodes, ...detail.operatorCodes];
+      }, err => {
+        if (err.status === 404) {
+        } else {
+          this.errorHandlerService.handler(err);
+        }
       });
   }
 
   save() {
     const codes = this.fetchMenuOperator(this.tree.getCheckedNodeList());
-    console.log(this.fetchPermissionFromMenu(this.menus, new Set<string>(codes.menus)));
-    console.log(this.fetchPermissionFromOperator(codes.operators));
-    this.router.navigate(['/admin/roles']);
+    const permissions: PermissionItem[] = [];
+    permissions.push(...this.fetchPermissionFromMenu(this.menus, new Set<string>(codes.menus)));
+    permissions.push(...this.fetchPermissionFromOperator(codes.operators));
+    this.roleService.addRole({
+      name: '角色1',
+      menuCodes: codes.menus,
+      operatorCodes: codes.operators,
+      permissions: permissions.map(permission => {
+        return {method: permission.method, path: permission.path};
+      })
+    }).subscribe(role => {
+      this.router.navigate(['/admin/roles']);
+    }, err => {
+      this.errorHandlerService.handler(err);
+    });
+
   }
 
   /**
@@ -86,11 +111,7 @@ export class RoleSavePageComponent implements OnInit {
     return codes;
   }
 
-  /**
-   * 转换
-   * @param menus
-   * @param operators
-   */
+
   private mapToNode(menus: MenuOperatorItem[], operators: Map<string, OperatorItem>) {
     if (!menus) {
       return [];

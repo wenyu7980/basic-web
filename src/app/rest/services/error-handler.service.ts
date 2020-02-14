@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {NzMessageService} from 'ng-zorro-antd';
+import {Location} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import {NzMessageService} from 'ng-zorro-antd';
 export class ErrorHandlerService {
   constructor(
     private router: Router,
-    private messageService: NzMessageService) {
+    private messageService: NzMessageService,
+    private location: Location) {
   }
 
   handler(response: HttpErrorResponse, url: string = '') {
@@ -29,7 +31,8 @@ export class ErrorHandlerService {
       case 403:
         this.messageService.error('权限不足，请联系管理员');
         console.log(response.error.message);
-        break;
+        this.location.back();
+        return;
       default:
         this.messageService.error(response.error.message);
         return;

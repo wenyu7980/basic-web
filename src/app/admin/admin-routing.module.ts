@@ -8,6 +8,7 @@ import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.co
 import {RoleSavePageComponent} from './pages/role-save-page/role-save-page.component';
 import {UserDetailPageComponent} from './pages/user-detail-page/user-detail-page.component';
 import {DepartmentDetailPageComponent} from './pages/department-detail-page/department-detail-page.component';
+import {DepartmentTablePageComponent} from './pages/department-table-page/department-table-page.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,10 @@ const routes: Routes = [
         path: 'users/:id',
         component: UserDetailPageComponent,
         data: {code: 'userDetailPage'}
+      }, {
+        path: 'departments',
+        component: DepartmentTablePageComponent,
+        data: {code: 'departmentTablePage'}
       }, {
         path: 'departments/:id',
         component: DepartmentDetailPageComponent,

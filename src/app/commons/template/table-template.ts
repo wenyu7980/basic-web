@@ -106,6 +106,10 @@ export abstract class TableTemplate<T, P extends TableQueryParam> implements OnI
     return true;
   }
 
+  protected refresh() {
+    this.route.navigate([]);
+  }
+
   private setIndexPage(index: number, size: number): boolean {
     if (+index && +size) {
       this.pageIndex = index;

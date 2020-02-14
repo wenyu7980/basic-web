@@ -12,7 +12,7 @@ export class OperatorDirective {
   @Input('appOperator')
   set condition(data: OperatorData) {
     this.viewContainer.clear();
-    if (this.provider.confirmOperator(data.code)) {
+    if (this.provider.confirmOperator(data.code) && OPERATORS.has(data.code)) {
       const item = OPERATORS.get(data.code);
       if (!item.show || item.show(data.data)) {
         // 创建模板对应的内嵌视图
