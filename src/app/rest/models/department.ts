@@ -11,9 +11,9 @@
  */
 
 /**
- * 用户
+ * 部门
  */
-export interface UserDetail { 
+export interface Department { 
     /**
      * 创建时间
      */
@@ -31,18 +31,8 @@ export interface UserDetail {
      * 删除者
      */
     readonly deletedUserId?: string;
-    /**
-     * 用户id
-     */
     id?: string;
-    /**
-     * 用户名称
-     */
     name?: string;
-    /**
-     * 系统管理员
-     */
-    system?: boolean;
     /**
      * 更新者
      */
@@ -51,8 +41,4 @@ export interface UserDetail {
      * 更新者
      */
     readonly updatedUserId?: string;
-    /**
-     * 用户名
-     */
-    username?: string;
 }

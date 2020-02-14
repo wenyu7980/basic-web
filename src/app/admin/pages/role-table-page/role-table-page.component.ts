@@ -19,7 +19,7 @@ export class RoleTablePageComponent extends TableTemplate<RoleItem, TableQueryPa
   protected errorHandler(error: HttpErrorResponse) {
   }
 
-  protected getData(param: TableQueryParam): Observable<TableData<RoleItem> | HttpErrorResponse> {
+  protected getData(param: TableQueryParam): Observable<TableData<RoleItem>> {
     return of<TableData<RoleItem>>({
       total: 30,
       data: [{id: '12', name: '123'}]

@@ -90,7 +90,7 @@ export abstract class TableTemplate<T, P extends TableQueryParam> implements OnI
    * 获取数据
    * @param param 参数
    */
-  protected abstract getData(param: P): Observable<TableData<T> | HttpErrorResponse>;
+  protected abstract getData(param: P): Observable<TableData<T>>;
 
   /**
    * 数据请求错误处理

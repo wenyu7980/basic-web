@@ -7,7 +7,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {NzMessageService} from 'ng-zorro-antd';
 import {debounceTime, map} from 'rxjs/operators';
 import {ErrorHandlerService, UserService} from '@rest';
-import {PageBody, User, UserListDetail} from '@rest-models';
+import {User, UserListDetail} from '@rest-models';
 
 @MenuOperators([
   {code: 'userAdd', show: () => true}
@@ -39,6 +39,11 @@ export class UserTablePageComponent extends TableTemplate<UserListDetail, TableQ
           Validators.required('用户名'),
           Validators.size('用户名', 6, 18)
         ]],
+        name: [null, [
+          Validators.required('姓名'),
+          Validators.size('姓名', 2, 6)
+        ]],
+
         password: [null, [
           Validators.required('密码'),
           Validators.size('密码', 6, 18)
@@ -72,9 +77,13 @@ export class UserTablePageComponent extends TableTemplate<UserListDetail, TableQ
   }
 
   protected getData(param: TableQueryParam):
-    Observable<TableData<UserListDetail> | HttpErrorResponse> {
-    return this.userService.getUsers({detail: true, ...param, index: param.index - 1}).pipe(
-      map((body: PageBody<UserListDetail>): TableData<UserListDetail> => {
+    Observable<TableData<UserListDetail>> {
+    return this.userService.getUsers({
+      ...param,
+      detail: true,
+      index: param.index - 1
+    }).pipe(
+      map((body) => {
         return {
           total: body.count,
           data: body.data
@@ -96,6 +105,7 @@ export class UserTablePageComponent extends TableTemplate<UserListDetail, TableQ
     const value = this.userAddModal.form.getRawValue();
     this.userService.addUser({
       username: value.username,
+      name: value.name,
       password: value.password
     }).subscribe((user: User) => {
       this.userAddModal.visible = false;

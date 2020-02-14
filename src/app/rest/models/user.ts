@@ -34,11 +34,11 @@ export interface User {
     /**
      * 用户id
      */
-    readonly id?: string;
+    id?: string;
     /**
-     * 用户密码
+     * 用户名称
      */
-    password?: string;
+    name?: string;
     /**
      * 系统管理员
      */

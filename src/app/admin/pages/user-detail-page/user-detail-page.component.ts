@@ -5,6 +5,7 @@ import {ErrorHandlerService, UserService} from '@rest';
 import {UserDetail} from '@rest-models';
 import {HttpErrorResponse} from '@angular/common/http';
 import {MenuOperators} from '@commons';
+import {TabDetailTemplate} from '../../../commons/template/tab-detail-template';
 
 @MenuOperators([
   {
@@ -20,7 +21,7 @@ import {MenuOperators} from '@commons';
   templateUrl: './user-detail-page.component.html',
   styleUrls: ['./user-detail-page.component.less']
 })
-export class UserDetailPageComponent implements OnInit {
+export class UserDetailPageComponent extends TabDetailTemplate implements OnInit {
   detail: UserDetail;
   selectedIndex: number;
 
@@ -32,21 +33,14 @@ export class UserDetailPageComponent implements OnInit {
     private errorService: ErrorHandlerService,
     private messageService: NzMessageService,
   ) {
+    super([null, 'user', 'admin', null], router, activatedRoute);
   }
 
   ngOnInit() {
+    super.ngOnInit();
     this.activatedRoute.params
       .subscribe((params: { id: string }) => {
         this.initPage(params.id);
-      });
-    this.activatedRoute.queryParams
-      .subscribe((params: { tab: string }) => {
-        if (params.tab === 'department') {
-          this.selectedIndex = 1;
-        } else {
-          this.selectedIndex = 0;
-          this.router.navigate([]);
-        }
       });
   }
 
@@ -75,19 +69,5 @@ export class UserDetailPageComponent implements OnInit {
       }
     });
   }
-
-  selectIndexChange(i: number) {
-    if (i === 1) {
-      this.router.navigate([], {
-        queryParams: {
-          tab: 'department',
-          index: i,
-          size: 10
-        }
-      });
-    } else {
-      this.router.navigate([]);
-    }
-
-  }
 }
+

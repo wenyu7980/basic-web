@@ -38,5 +38,5 @@ export interface LoginResult {
    */
   readonly queryToken?: string;
   user?: UserSimple;
-  system: boolean;
+  system?: boolean;
 }
