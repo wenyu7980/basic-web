@@ -24,7 +24,8 @@ import {RoleSavePageComponent} from './pages/role-save-page/role-save-page.compo
 import {ReactiveFormsModule} from '@angular/forms';
 import {MenuOperatorModule, MenuOperatorProvider, ValidatorErrorPipe} from '@commons';
 import {UserDetailPageComponent} from './pages/user-detail-page/user-detail-page.component';
-import { UserDepartmentTabComponent } from './pages/user-detail-page/tabs/user-department-tab/user-department-tab.component';
+import {DepartmentTabComponent} from './tabs/department-tab/department-tab.component';
+import { DepartmentDetailPageComponent } from './pages/department-detail-page/department-detail-page.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { UserDepartmentTabComponent } from './pages/user-detail-page/tabs/user-d
     RoleTablePageComponent,
     RoleSavePageComponent,
     UserDetailPageComponent,
-    UserDepartmentTabComponent,
+    DepartmentTabComponent,
+    DepartmentDetailPageComponent,
   ],
   imports: [
     CommonModule,

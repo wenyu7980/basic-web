@@ -1,0 +1,7 @@
+<div *ngIf="detail">
+  <div>{{detail.name}}</div>
+  <nz-tabset [(nzSelectedIndex)]="selectedIndex"
+             (nzSelectedIndexChange)="selectIndexChange($event)">
+    <nz-tab nzTitle="详情"></nz-tab>
+  </nz-tabset>
+</div>

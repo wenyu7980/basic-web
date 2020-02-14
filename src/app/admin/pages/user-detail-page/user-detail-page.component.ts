@@ -4,8 +4,7 @@ import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ErrorHandlerService, UserService} from '@rest';
 import {UserDetail} from '@rest-models';
 import {HttpErrorResponse} from '@angular/common/http';
-import {MenuOperators} from '@commons';
-import {TabDetailTemplate} from '../../../commons/template/tab-detail-template';
+import {MenuOperators, TabDetailTemplate} from '@commons';
 
 @MenuOperators([
   {

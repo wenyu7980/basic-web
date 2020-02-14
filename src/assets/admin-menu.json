@@ -86,6 +86,12 @@
             "path": "/roles"
           }
         ]
+      },
+      {
+        "title": "部门管理",
+        "path": "/admin/departments",
+        "code": "departmentTablePage",
+        "configurable": true
       }
     ]
   }

@@ -9,16 +9,20 @@ import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-department-tab',
-  templateUrl: './user-department-tab.component.html',
-  styleUrls: ['./user-department-tab.component.less']
+  templateUrl: './department-tab.component.html',
+  styleUrls: ['./department-tab.component.less']
 })
-export class UserDepartmentTabComponent
+export class DepartmentTabComponent
   extends TabTableTemplate<DepartmentListDetail, DepartmentQueryParam> implements OnInit {
 
   @Input()
   userId: string;
   @Input()
   adminId: string;
+  @Input()
+  companyId: string;
+  @Input()
+  parentId: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -36,14 +40,18 @@ export class UserDepartmentTabComponent
     return {
       tab: this.tab,
       userId: this.userId,
-      adminId: this.adminId
+      adminId: this.adminId,
+      companyId: this.companyId,
+      parentId: this.parentId,
     };
   }
 
   protected setParam(param: DepartmentQueryParam): boolean {
     return param.tab !== this.tab
       || param.userId !== this.userId
-      || param.adminId !== this.adminId;
+      || param.adminId !== this.adminId
+      || param.companyId !== this.companyId
+      || param.parentId !== this.parentId;
   }
 
   protected getData(param: DepartmentQueryParam): Observable<TableData<DepartmentSimple>> {
@@ -66,4 +74,6 @@ export class UserDepartmentTabComponent
 interface DepartmentQueryParam extends TabTableQueryParam {
   userId: string;
   adminId: string;
+  companyId: string;
+  parentId: string;
 }

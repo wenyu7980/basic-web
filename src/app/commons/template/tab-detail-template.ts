@@ -21,19 +21,23 @@ export abstract class TabDetailTemplate implements OnInit {
       .subscribe((params: { tab: string }) => {
         for (const item of this.tabList) {
           if (item.tab === params.tab) {
-            this.selectedIndex = item.index;
+            this.selectIndexChange(item.index);
             return;
           }
         }
-        this.r.navigate([]);
+        this.selectIndexChange(0);
       });
   }
 
   selectIndexChange(i: number) {
     this.selectedIndex = i;
-    this.r.navigate([], {
-      queryParams: {...this.a.snapshot.queryParams, tab: this.tabList[i].tab}
-    });
+    if (this.tabList[i].tab === null) {
+      this.r.navigate([]);
+    } else {
+      this.r.navigate([], {
+        queryParams: {...this.a.snapshot.queryParams, tab: this.tabList[i].tab}
+      });
+    }
   }
 }
 
