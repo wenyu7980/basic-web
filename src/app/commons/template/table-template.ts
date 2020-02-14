@@ -7,7 +7,7 @@ import {filter, switchMap} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OnDestroy, OnInit} from '@angular/core';
 
-export abstract class TableTemplate<T> implements OnInit, OnDestroy {
+export abstract class TableTemplate<T, P extends TableQueryParam> implements OnInit, OnDestroy {
 
   /** 数据 */
   data: T[];
@@ -20,7 +20,7 @@ export abstract class TableTemplate<T> implements OnInit, OnDestroy {
   /** 是否在加载中 */
   loading: boolean;
   /** 汇总路径参数变化 */
-  private subscriber: Subscriber<TableQueryParam>;
+  private subscriber: Subscriber<P>;
   private subscription: Subscription;
 
   constructor(private route: Router,
@@ -33,11 +33,13 @@ export abstract class TableTemplate<T> implements OnInit, OnDestroy {
   ngOnInit(): void {
     // 参数变化处理
     this.subscription =
-      new Observable((subscriber: Subscriber<TableQueryParam>) => {
+      new Observable((subscriber: Subscriber<P>) => {
         this.subscriber = subscriber;
       }).pipe(
+        filter(params => this.filter(params)),
         filter(queryParam => {
-          if (this.setIndexPage(queryParam.index, queryParam.size) || this.setParam(queryParam)) {
+          if (this.setIndexPage(queryParam.index, queryParam.size)
+            || this.setParam(queryParam)) {
             this.navigate({
               ...this.getParam(),
               index: this.pageIndex,
@@ -61,7 +63,7 @@ export abstract class TableTemplate<T> implements OnInit, OnDestroy {
       });
     // 路径参数变化
     this.activated.queryParams
-      .subscribe((param: TableQueryParam) => {
+      .subscribe((param: P) => {
         this.subscriber.next(param);
       });
   }
@@ -74,7 +76,7 @@ export abstract class TableTemplate<T> implements OnInit, OnDestroy {
   /**
    * 获取参数
    */
-  protected abstract getParam(): TableQueryParam;
+  protected abstract getParam(): P;
 
   /**
    * 设置参数，同时将不合法的参数设置成合法的
@@ -82,19 +84,27 @@ export abstract class TableTemplate<T> implements OnInit, OnDestroy {
    * @return 如果参数设置前后有变化，则返回true
    *         如果参数设置前后无变化，返回false
    */
-  protected abstract setParam(param: TableQueryParam): boolean;
+  protected abstract setParam(param: P): boolean;
 
   /**
    * 获取数据
    * @param param 参数
    */
-  protected abstract getData(param: TableQueryParam): Observable<TableData<T> | HttpErrorResponse>;
+  protected abstract getData(param: P): Observable<TableData<T> | HttpErrorResponse>;
 
   /**
    * 数据请求错误处理
    * @param error 错误信息
    */
   protected abstract errorHandler(err: HttpErrorResponse);
+
+  /**
+   * 判断是否响应
+   * @param params 查询参数
+   */
+  protected filter(params: TableQueryParam): boolean {
+    return true;
+  }
 
   private setIndexPage(index: number, size: number): boolean {
     if (+index && +size) {

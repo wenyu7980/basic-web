@@ -15,6 +15,7 @@ import {
   NzMessageModule,
   NzModalModule,
   NzTableModule,
+  NzTabsModule,
   NzTreeModule
 } from 'ng-zorro-antd';
 import {MenuOperatorProviderAdmin} from './menu-operator-provider-admin';
@@ -22,7 +23,8 @@ import {RoleTablePageComponent} from './pages/role-table-page/role-table-page.co
 import {RoleSavePageComponent} from './pages/role-save-page/role-save-page.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MenuOperatorModule, MenuOperatorProvider, ValidatorErrorPipe} from '@commons';
-import { UserDetailPageComponent } from './pages/user-detail-page/user-detail-page.component';
+import {UserDetailPageComponent} from './pages/user-detail-page/user-detail-page.component';
+import { UserDepartmentTabComponent } from './pages/user-detail-page/tabs/user-department-tab/user-department-tab.component';
 
 
 @NgModule({
@@ -34,6 +36,7 @@ import { UserDetailPageComponent } from './pages/user-detail-page/user-detail-pa
     RoleTablePageComponent,
     RoleSavePageComponent,
     UserDetailPageComponent,
+    UserDepartmentTabComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +53,7 @@ import { UserDetailPageComponent } from './pages/user-detail-page/user-detail-pa
     NzFormModule,
     NzInputModule,
     NzModalModule,
+    NzTabsModule,
   ],
   providers: [
     {provide: MenuOperatorProvider, useClass: MenuOperatorProviderAdmin}

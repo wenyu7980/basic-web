@@ -12,4 +12,11 @@
       删除
     </button>
   </div>
+  <nz-tabset (nzSelectedIndexChange)="selectIndexChange($event)"
+             [(nzSelectedIndex)]="selectedIndex">
+    <nz-tab nzTitle="详情">详情</nz-tab>
+    <nz-tab nzTitle="部门">
+      <app-user-department-tab tab="department" [userId]="detail.id"></app-user-department-tab>
+    </nz-tab>
+  </nz-tabset>
 </div>

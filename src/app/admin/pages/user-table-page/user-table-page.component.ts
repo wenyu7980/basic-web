@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MenuOperators, TableData, TableTemplate, TableQueryParam, Validators} from '@commons';
+import {MenuOperators, TableData, TableQueryParam, TableTemplate, Validators} from '@commons';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -17,7 +17,7 @@ import {PageBody, User, UserListDetail} from '@rest-models';
   templateUrl: './user-table-page.component.html',
   styleUrls: ['./user-table-page.component.less']
 })
-export class UserTablePageComponent extends TableTemplate<UserListDetail> implements OnInit {
+export class UserTablePageComponent extends TableTemplate<UserListDetail, TableQueryParam> implements OnInit {
   userAddModal: {
     form: FormGroup,
     visible: boolean,

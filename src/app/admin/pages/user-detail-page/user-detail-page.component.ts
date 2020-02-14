@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ErrorHandlerService, UserService} from '@rest';
 import {UserDetail} from '@rest-models';
@@ -22,9 +22,11 @@ import {MenuOperators} from '@commons';
 })
 export class UserDetailPageComponent implements OnInit {
   detail: UserDetail;
+  selectedIndex: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private modalService: NzModalService,
     private userService: UserService,
     private errorService: ErrorHandlerService,
@@ -36,6 +38,15 @@ export class UserDetailPageComponent implements OnInit {
     this.activatedRoute.params
       .subscribe((params: { id: string }) => {
         this.initPage(params.id);
+      });
+    this.activatedRoute.queryParams
+      .subscribe((params: { tab: string }) => {
+        if (params.tab === 'department') {
+          this.selectedIndex = 1;
+        } else {
+          this.selectedIndex = 0;
+          this.router.navigate([]);
+        }
       });
   }
 
@@ -63,5 +74,20 @@ export class UserDetailPageComponent implements OnInit {
           });
       }
     });
+  }
+
+  selectIndexChange(i: number) {
+    if (i === 1) {
+      this.router.navigate([], {
+        queryParams: {
+          tab: 'department',
+          index: i,
+          size: 10
+        }
+      });
+    } else {
+      this.router.navigate([]);
+    }
+
   }
 }

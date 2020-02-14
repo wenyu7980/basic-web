@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TableData, TableTemplate, TableQueryParam} from '@commons';
+import {TableData, TableQueryParam, TableTemplate} from '@commons';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 
@@ -9,7 +9,7 @@ import {Observable, of} from 'rxjs';
   templateUrl: './role-table-page.component.html',
   styleUrls: ['./role-table-page.component.less']
 })
-export class RoleTablePageComponent extends TableTemplate<RoleItem> implements OnInit {
+export class RoleTablePageComponent extends TableTemplate<RoleItem, TableQueryParam> implements OnInit {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute
   ) {
