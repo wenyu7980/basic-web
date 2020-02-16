@@ -20,7 +20,6 @@ export interface MenuOperatorItem {
   disabled?: boolean;
   /**
    * 是否可配置
-   * 叶子节点有效
    */
   configurable: boolean;
   /** 子菜单 */

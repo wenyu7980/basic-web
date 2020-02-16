@@ -1,4 +1,18 @@
-<nz-tree nzCheckable [nzData]="data" [nzCheckedKeys]="checkedKeys" #Tree nzShowIcon="true">
-</nz-tree>
-<button nz-button nzType="primary" (click)="save()">保存</button>
-
+<div style="background: white;padding: 10px">
+  <button nz-button nzType="primary" (click)="save()">保存</button>
+  <form nz-form [formGroup]="form">
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="2" [nzXs]="8">角色名称</nz-form-label>
+      <nz-form-control [nzErrorTip]="errTpl" [nzSm]="8" [nzXs]="16">
+        <input nz-input formControlName="name">
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <nz-tree nzCheckable [nzData]="data" [nzCheckedKeys]="checkedKeys" #Tree nzShowIcon="true">
+  </nz-tree>
+</div>
+<ng-template #errTpl let-control>
+  <div *ngIf="control.errors">
+    {{control.errors | validatorError}}
+  </div>
+</ng-template>

@@ -8,6 +8,7 @@
   {
     "title": "用户权限管理",
     "icon": "team",
+    "configurable": true,
     "children": [
       {
         "title": "用户管理",
@@ -90,6 +91,22 @@
               {
                 "method": "POST",
                 "path": "/roles"
+              }
+            ]
+          },
+          {
+            "title": "角色详情",
+            "code": "roleDetailPage",
+            "configurable": true,
+            "disabled": true,
+            "permissions": [
+              {
+                "method": "PUT",
+                "path": "/roles/*"
+              },
+              {
+                "method": "GET",
+                "path": "/roles/*"
               }
             ]
           },

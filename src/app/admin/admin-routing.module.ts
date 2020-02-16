@@ -9,6 +9,7 @@ import {RoleSavePageComponent} from './pages/role-save-page/role-save-page.compo
 import {UserDetailPageComponent} from './pages/user-detail-page/user-detail-page.component';
 import {DepartmentDetailPageComponent} from './pages/department-detail-page/department-detail-page.component';
 import {DepartmentTablePageComponent} from './pages/department-table-page/department-table-page.component';
+import {RoleDetailPageComponent} from './pages/role-detail-page/role-detail-page.component';
 
 
 const routes: Routes = [
@@ -41,13 +42,13 @@ const routes: Routes = [
         component: RoleTablePageComponent,
         data: {code: 'roleTablePage'}
       }, {
-        path: 'roles/create',
+        path: 'roles/save',
         component: RoleSavePageComponent,
         data: {code: 'roleAddPage'}
       }, {
-        path: 'roles/:id/edit',
-        component: RoleSavePageComponent,
-        data: {code: 'roleEditPage'}
+        path: 'roles/:id',
+        component: RoleDetailPageComponent,
+        data: {code: 'roleDetailPage'}
       }
     ]
   }

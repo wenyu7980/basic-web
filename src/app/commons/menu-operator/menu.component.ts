@@ -17,17 +17,24 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.menuProvider.getMenuItems()
+      .subscribe((menus) => {
+        this.menus = this.menuHandler(menus);
+        this.updateMenu(this.router.url, this.menus);
+      });
+    // 菜单跟踪
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateMenu(this.router.url, this.menus);
       }
     });
-    this.menuProvider.getMenuItems().subscribe((menus) => {
-      this.menus = this.menuHandler(menus);
-      this.updateMenu(this.router.url, this.menus);
-    });
   }
 
+  /**
+   * 激活页面关联的菜单
+   * @param url 路径
+   * @param menus 菜单
+   */
   private updateMenu(url: string, menus: MenuOperatorItem[]): boolean {
     let open = false;
     for (const menu of menus) {

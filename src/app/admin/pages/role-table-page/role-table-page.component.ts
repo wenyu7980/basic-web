@@ -4,9 +4,8 @@ import {MenuOperators, TableData, TableQueryParam, TableTemplate} from '@commons
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {RoleListDetail} from '@rest-models';
-import {RoleService} from '../../../rest/services/role.service';
 import {map} from 'rxjs/operators';
-import {ErrorHandlerService} from '@rest';
+import {ErrorHandlerService, RoleService} from '@rest';
 
 @MenuOperators([
   {code: 'roleDelete', show: (data: RoleListDetail) => !data.deletedFlag}
@@ -56,7 +55,7 @@ export class RoleTablePageComponent extends TableTemplate<RoleListDetail, TableQ
    * 创建角色
    */
   roleCreate() {
-    this.router.navigate(['/admin/roles/create']);
+    this.router.navigate(['/admin/roles/save']);
   }
 
   deleteRole(id: string) {

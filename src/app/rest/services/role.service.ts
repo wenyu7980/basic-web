@@ -11,8 +11,21 @@ export class RoleService {
   constructor(private client: HttpClient) {
   }
 
+  /**
+   * 创建角色
+   * @param role 角色
+   */
   addRole(role: RoleAdd): Observable<Role> {
     return this.client.post('/roles', role);
+  }
+
+  /**
+   * 修改角色
+   * @param id 角色id
+   * @param role 角色
+   */
+  modifyRole(id: string, role: RoleAdd): Observable<Role> {
+    return this.client.put(`/roles/${id}`, role);
   }
 
   /**

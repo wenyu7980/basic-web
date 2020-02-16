@@ -1,11 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from 'ng-zorro-antd';
+import {NzMessageService, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from 'ng-zorro-antd';
 import {HttpClient} from '@angular/common/http';
-import {MenuOperatorItem, OperatorItem, PermissionItem} from '@commons';
+import {MenuOperatorItem, OperatorItem, PermissionItem, Validators} from '@commons';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {RoleService} from '../../../rest/services/role.service';
-import {ErrorHandlerService} from '@rest';
+import {ErrorHandlerService, RoleService} from '@rest';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {forkJoin} from 'rxjs';
+import {RoleAdd} from '@rest-models';
 
 @Component({
   selector: 'app-role-create-page',
@@ -19,51 +21,65 @@ export class RoleSavePageComponent implements OnInit {
   /** 选中的keys */
   checkedKeys: string[];
   /** 菜单 */
-  menus: MenuOperatorItem[];
+  menuPermissions: Map<string, PermissionItem[]>;
   /** 操作 */
-  operators: OperatorItem[];
+  operatorPermissions: Map<string, PermissionItem[]>;
+  /** 角色名称 */
+  form: FormGroup;
+  private roleId: string;
 
   constructor(private httpClient: HttpClient,
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private roleService: RoleService,
-              private errorHandlerService: ErrorHandlerService) {
+              private errorHandlerService: ErrorHandlerService,
+              private fb: FormBuilder,
+              private messageService: NzMessageService) {
+    this.form = this.fb.group({
+      name: [null, [
+        Validators.required('角色名称'),
+        Validators.size('角色名称', 2, 20)
+      ]]
+    });
   }
 
   ngOnInit() {
-    this.httpClient.get<OperatorItem[]>('/assets/admin-operator.json')
-      .pipe(
-        tap(items => this.operators = items),
-        map(operators => operators.reduce((ops, op) => {
-          ops.set(op.code, op);
-          return ops;
-        }, new Map<string, OperatorItem>())),
-        switchMap(operators => {
-          return this.httpClient.get<MenuOperatorItem[]>('/assets/admin-menu.json')
-            .pipe(
-              tap(items => this.menus = items),
-              map(menus => this.mapToNode(menus, operators))
-            );
-        })
-      )
-      .subscribe(nodes => {
-          this.data = nodes;
-        }
-      );
+    forkJoin(
+      this.httpClient.get<OperatorItem[]>('/assets/admin-operator.json')
+        .pipe(
+          map(operators => operators.reduce(
+            (ops, op) =>
+              ops.set(op.code, op),
+            new Map<string, OperatorItem>())),
+          tap(operators => {
+            this.operatorPermissions = new Map<string, PermissionItem[]>();
+            for (const [key, op] of operators.entries()) {
+              this.operatorPermissions.set(key, op.permissions || []);
+            }
+          })),
+      this.httpClient.get<MenuOperatorItem[]>('/assets/admin-menu.json')
+        .pipe(tap(menus => this.menuPermissions = this.getMenuPermissionItems(menus)))
+    ).subscribe(menuOperator => {
+        this.data = this.mapToNode(menuOperator[1], menuOperator[0]);
+      }
+    );
     /** 数据获取 */
     this.activatedRoute.queryParamMap
       .pipe(
         debounceTime(500),
         filter(params => params.has('id')),
         switchMap((params) => {
-          return this.roleService.getRole(params.get('id'), true);
+          this.roleId = params.get('id');
+          return this.roleService.getRole(this.roleId, true);
         })
       )
       .subscribe((detail) => {
         const checkedKeys = this.tree.getCheckedNodeList().map(node => node.key);
         this.checkedKeys = [...checkedKeys, ...detail.menuCodes, ...detail.operatorCodes];
+        this.form.patchValue({name: detail.name});
       }, err => {
         if (err.status === 404) {
+          this.roleId = null;
         } else {
           this.errorHandlerService.handler(err);
         }
@@ -71,24 +87,60 @@ export class RoleSavePageComponent implements OnInit {
   }
 
   save() {
+    if (this.form.invalid) {
+      this.form.markAsDirty();
+      return;
+    }
     const codes = this.fetchMenuOperator(this.tree.getCheckedNodeList());
     const permissions: PermissionItem[] = [];
-    permissions.push(...this.fetchPermissionFromMenu(this.menus, new Set<string>(codes.menus)));
+    permissions.push(...this.fetchPermissionFromMenu(codes.menus));
     permissions.push(...this.fetchPermissionFromOperator(codes.operators));
-    this.roleService.addRole({
-      name: '角色1',
+    const role: RoleAdd = {
+      name: this.form.value.name,
       menuCodes: codes.menus,
       operatorCodes: codes.operators,
       permissions: permissions.map(permission => {
         return {method: permission.method, path: permission.path};
       })
-    }).subscribe(role => {
-      this.router.navigate(['/admin/roles']);
-    }, err => {
-      this.errorHandlerService.handler(err);
-    });
-
+    };
+    if (this.roleId) {
+      this.roleService.modifyRole(this.roleId, role).subscribe(
+        r => {
+          this.messageService.success('修改成功');
+          this.router.navigate(['/admin/roles', r.id]);
+        }, err => this.errorHandlerService.handler(err));
+    } else {
+      this.roleService.addRole(role).subscribe(
+        r => {
+          this.messageService.success('创建成功');
+          this.router.navigate(['/admin/roles', r.id]);
+        }, err => this.errorHandlerService.handler(err));
+    }
   }
+
+  /**
+   * 获取菜单权限 code-permission
+   * @param menus 菜单
+   */
+  private getMenuPermissionItems(menus: MenuOperatorItem[]): Map<string, PermissionItem[]> {
+    const items = new Map<string, PermissionItem[]>();
+    if (menus) {
+      for (const menu of menus) {
+        if (menu.code) {
+          items.set(menu.code, menu.permissions || []);
+        }
+        for (const [key, value] of this.getMenuPermissionItems(menu.children).entries()) {
+          items.set(key, value);
+        }
+      }
+    }
+    return items;
+  }
+
+  /**
+   * 保存
+   */
+
 
   /**
    * 获取code
@@ -111,7 +163,11 @@ export class RoleSavePageComponent implements OnInit {
     return codes;
   }
 
-
+  /**
+   * 生成node节点
+   * @param menus 菜单
+   * @param operators 按钮
+   */
   private mapToNode(menus: MenuOperatorItem[], operators: Map<string, OperatorItem>) {
     if (!menus) {
       return [];
@@ -120,26 +176,30 @@ export class RoleSavePageComponent implements OnInit {
     for (const menu of menus) {
       // 处理子节点
       const child = this.mapToNode(menu.children, operators);
+      // 添加按钮
       if (menu.operators) {
         for (const op of menu.operators) {
           child.push({
             key: op,
             title: operators.get(op).name,
             isLeaf: true,
+            /** 是否是操作 */
             opFlag: true,
             valid: true,
           });
         }
       }
+      // 添加菜单
       rets.push({
         key: menu.code || Math.random().toString(),
         title: menu.title,
-        disableCheckbox: !menu.configurable && child.length === 0,
+        disableCheckbox: !menu.configurable,
         opFlag: false,
+        /** 是否是有code */
         valid: menu.code,
         isLeaf: child.length === 0,
         children: child,
-        checked: !menu.configurable && child.length === 0,
+        checked: !menu.configurable,
         icon: 'menu'
       });
     }
@@ -151,28 +211,23 @@ export class RoleSavePageComponent implements OnInit {
    * @param menus 菜单
    * @param codes 菜单code
    */
-  private fetchPermissionFromMenu(menus: MenuOperatorItem[], codes: Set<string>): PermissionItem[] {
-    const items: PermissionItem[] = [];
-    for (const item of menus) {
-      if (codes.has(item.code) && item.permissions) {
-        items.push(...item.permissions);
-      }
-      if (item.children) {
-        items.push(...this.fetchPermissionFromMenu(item.children, codes));
-      }
+  private fetchPermissionFromMenu(codes: string[]): PermissionItem[] {
+    const permissions = new Array<PermissionItem>();
+    for (const code of codes) {
+      permissions.push(...this.menuPermissions.get(code));
     }
-    return items;
+    return permissions;
   }
 
+  /**
+   * 获取操作所需权限
+   * @param codes 操作code
+   */
   private fetchPermissionFromOperator(codes: string[]): PermissionItem[] {
-    const sets = new Set<string>(codes);
-    const items: PermissionItem[] = [];
-    for (const operator of this.operators) {
-      if (sets.has(operator.code) && operator.permissions) {
-        items.push(...operator.permissions);
-      }
+    const permissions = new Array<PermissionItem>();
+    for (const code of codes) {
+      permissions.push(...this.operatorPermissions.get(code));
     }
-    return items;
+    return permissions;
   }
-
 }

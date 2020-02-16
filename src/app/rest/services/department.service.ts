@@ -27,7 +27,7 @@ export class DepartmentService {
     });
   }
 
-  getDeparment(id: string, detailFlag: boolean): Observable<DepartmentDetail> {
+  getDepartment(id: string, detailFlag: boolean): Observable<DepartmentDetail> {
     return this.httpClient.get(`/departments/${id}`,
       {params: ParamConvert.convert({detail: detailFlag})});
   }

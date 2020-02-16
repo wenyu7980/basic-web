@@ -22,7 +22,7 @@ export class DepartmentDetailPageComponent extends TabDetailTemplate implements 
   ngOnInit() {
     this.activatedRoute.paramMap
       .pipe(switchMap(params =>
-        this.departmentService.getDeparment(params.get('id'), true)
+        this.departmentService.getDepartment(params.get('id'), true)
       ))
       .subscribe(detail => {
         this.detail = detail;
