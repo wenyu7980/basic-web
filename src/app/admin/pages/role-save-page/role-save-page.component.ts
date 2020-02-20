@@ -78,7 +78,7 @@ export class RoleSavePageComponent implements OnInit {
         this.checkedKeys = [...checkedKeys, ...detail.menuCodes, ...detail.operatorCodes];
         this.form.patchValue({name: detail.name});
       }, err => {
-        if (err.status === 404) {
+        if (this.errorHandlerService.notFound(err)) {
           this.roleId = null;
         } else {
           this.errorHandlerService.handler(err);

@@ -14,6 +14,17 @@ export class ErrorHandlerService {
     private location: Location) {
   }
 
+  /**
+   * 不存在异常
+   * @param response 响应结果
+   */
+  notFound(response: HttpErrorResponse): boolean {
+    if (response.status === 404 && response.error.code) {
+      return true;
+    }
+    return false;
+  }
+
   handler(response: HttpErrorResponse, url: string = '') {
     switch (response.status) {
       case 401:
@@ -30,7 +41,6 @@ export class ErrorHandlerService {
         break;
       case 403:
         this.messageService.error('权限不足，请联系管理员');
-        console.log(response.error.message);
         this.location.back();
         return;
       default:
