@@ -36,11 +36,18 @@
   (nzOnOk)="userAdd()"
   [nzOkLoading]="userAddModal.loading"
 >
-  <form nz-form [formGroup]="userAddModal.form">
+  <form nz-form
+        [formGroup]="userAddModal.form">
     <nz-form-item>
       <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">用户名</nz-form-label>
       <nz-form-control [nzErrorTip]="errTpl" [nzSm]="14" [nzXs]="24">
         <input nz-input formControlName="username">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">姓名</nz-form-label>
+      <nz-form-control [nzErrorTip]="errTpl" [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="name">
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>

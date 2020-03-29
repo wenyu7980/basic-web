@@ -5,6 +5,7 @@ import {LoginRoutingModule} from './login-routing.module';
 import {LoginPageComponent} from './login-page/login-page.component';
 import {NzButtonModule, NzFormModule, NzInputModule, NzMessageModule} from 'ng-zorro-antd';
 import {ReactiveFormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
 
 
 @NgModule({

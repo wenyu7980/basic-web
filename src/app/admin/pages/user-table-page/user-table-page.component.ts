@@ -64,6 +64,8 @@ export class UserTablePageComponent extends TableTemplate<UserListDetail, TableQ
         if (this.userAddModal.form.value.password !== value) {
           this.userAddModal.form.get('confirm')
             .setErrors({confirm: '密码与确认密码不一致'});
+        } else {
+          this.userAddModal.form.get('confirm').setErrors(null);
         }
       });
   }

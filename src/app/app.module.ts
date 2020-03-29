@@ -9,6 +9,7 @@ import zh from '@angular/common/locales/zh';
 import {PrefixInterceptor} from './prefix-interceptor';
 import {TokenInterceptor} from './token-interceptor';
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 registerLocaleData(zh);
 
@@ -18,6 +19,7 @@ registerLocaleData(zh);
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     NzMessageModule,
     AppRoutingModule,
     HttpClientModule,
