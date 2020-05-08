@@ -15,7 +15,7 @@ import {RoleAdd} from '@rest-models';
   styleUrls: ['./role-save-page.component.less']
 })
 export class RoleSavePageComponent implements OnInit {
-  @ViewChild('Tree', {static: false})
+  @ViewChild('Tree')
   tree: NzTreeComponent;
   data: NzTreeNodeOptions[];
   /** 选中的keys */

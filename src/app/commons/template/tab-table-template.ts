@@ -1,7 +1,8 @@
 import {TableQueryParam, TableTemplate} from './table-template';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Input} from '@angular/core';
+import { Input, Directive } from '@angular/core';
 
+@Directive()
 export abstract class TabTableTemplate<T, P extends TabTableQueryParam> extends TableTemplate<T, P> {
   @Input()
   tab: string;
