@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {PageBody, User, UserAdd, UserDetail, UserListDetail} from '@rest-models';
+import {PageBody, RoleMenuOperator, User, UserAdd, UserDetail, UserListDetail} from '@rest-models';
 import {ParamConvert} from './param-convert';
 
 @Injectable({
@@ -41,5 +41,9 @@ export class UserService {
    */
   removeUser(id: string): Observable<void> {
     return this.httpClient.delete<void>(`/users/${id}`);
+  }
+
+  getUserMenuOperator(): Observable<RoleMenuOperator> {
+    return this.httpClient.get<RoleMenuOperator>('/users/menuoperators');
   }
 }

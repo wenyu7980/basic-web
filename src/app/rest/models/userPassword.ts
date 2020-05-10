@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 用户密码
  */

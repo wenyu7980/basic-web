@@ -10,11 +10,12 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 部门创建
  */
 export interface DepartmentAdd { 
-    companyId: string;
+    adminId?: string;
     name: string;
     parentId?: string;
 }

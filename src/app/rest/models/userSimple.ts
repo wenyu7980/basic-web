@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 用户简要
  */
@@ -17,9 +18,13 @@ export interface UserSimple {
     /**
      * 用户id
      */
-    readonly id?: string;
+    id?: string;
+    /**
+     * 用户名称
+     */
+    name?: string;
     /**
      * 用户名
      */
-    readonly username?: string;
+    username?: string;
 }

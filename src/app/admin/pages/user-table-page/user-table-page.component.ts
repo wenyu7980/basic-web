@@ -108,7 +108,8 @@ export class UserTablePageComponent extends TableTemplate<UserListDetail, TableQ
     this.userService.addUser({
       username: value.username,
       name: value.name,
-      password: value.password
+      password: value.password,
+      departmentId: ''
     }).subscribe((user: User) => {
       this.userAddModal.visible = false;
       this.userAddModal.loading = false;

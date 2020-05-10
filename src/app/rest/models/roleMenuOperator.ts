@@ -12,20 +12,15 @@
 
 
 /**
- * 增加用户
+ * 角色菜单操作
  */
-export interface UserAdd { 
+export interface RoleMenuOperator { 
     /**
-     * 部门id
+     * 菜单
      */
-    departmentId: string;
+    menus?: Array<string>;
     /**
-     * 用户名称
+     * 操作
      */
-    name: string;
-    /**
-     * 密码
-     */
-    password: string;
-    username: string;
+    operators?: Array<string>;
 }

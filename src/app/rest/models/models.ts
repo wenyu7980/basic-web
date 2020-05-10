@@ -16,6 +16,7 @@ export * from './role';
 export * from './roleAdd';
 export * from './roleDetail';
 export * from './roleListDetail';
+export * from './roleMenuOperator';
 export * from './user';
 export * from './userAdd';
 export * from './userDetail';

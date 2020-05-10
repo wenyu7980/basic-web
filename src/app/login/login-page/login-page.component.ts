@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ErrorHandlerService, LoginService} from '@rest';
+import {ErrorHandlerService, LoginService, UserService} from '@rest';
 import {LoginResult} from '@rest-models';
 import {HttpErrorResponse} from '@angular/common/http';
 import {NzMessageService} from 'ng-zorro-antd';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LoginResultCache} from '@commons';
+import {RoleMenuOperatorCache} from '../../commons/cache/role-menu-operator-cache';
 
 @Component({
   selector: 'app-login-page',
@@ -22,7 +23,9 @@ export class LoginPageComponent implements OnInit {
     private messageService: NzMessageService,
     private fb: FormBuilder,
     private resultCache: LoginResultCache,
+    private roleMenuCache: RoleMenuOperatorCache,
     private errorService: ErrorHandlerService,
+    private userService: UserService,
   ) {
     this.form = this.fb.group(
       {
@@ -50,6 +53,10 @@ export class LoginPageComponent implements OnInit {
         password: this.form.value.password
       }).subscribe((result: LoginResult) => {
       this.resultCache.setValue(result);
+      this.userService.getUserMenuOperator()
+        .subscribe((operator) => {
+          this.roleMenuCache.setValue(operator);
+        });
       this.router.navigate(['/admin/home']);
     }, (err: HttpErrorResponse) => {
       this.errorService.handler(err, '/login');
